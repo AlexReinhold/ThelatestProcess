@@ -1,7 +1,7 @@
 package mapper.tn;
 
-import models.tn.Categoria;
-import models.tn.noticia;
+import models.tl.Categoria;
+import models.tl.noticia;
 import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;

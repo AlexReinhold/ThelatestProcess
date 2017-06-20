@@ -1,8 +1,8 @@
 package service;
 
 import dao.FuenteDao;
-import models.tn.Fuente;
-import models.tn.FuentePorArticulo;
+import models.tl.Fuente;
+import models.tl.FuentePorArticulo;
 import models.ttrss.Source;
 import org.apache.log4j.Logger;
 import org.springframework.dao.DuplicateKeyException;
@@ -12,9 +12,6 @@ import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * Created by nlperez on 1/31/17.
- */
 public class SincronizarFuentes implements Runnable{
 
     private FuenteDao fuenteDao;

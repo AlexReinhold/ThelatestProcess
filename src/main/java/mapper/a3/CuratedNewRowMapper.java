@@ -1,10 +1,8 @@
 package mapper.a3;
 
-import mapper.ttrss.SourceRowMapper;
-import models.a3.Cluster;
-import models.a3.CuratedNew;
-import models.a3.NewsContent;
-import models.a3.NewsImg;
+import models.j2.Cluster;
+import models.j2.CuratedNew;
+import models.j2.NewsContent;
 import models.ttrss.Source;
 import org.springframework.jdbc.core.RowMapper;
 

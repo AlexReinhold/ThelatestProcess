@@ -1,9 +1,9 @@
 package mapper.tn;
 
-import models.tn.Articulo;
-import models.tn.ArticuloNoProcesado;
-import models.tn.FuentePorArticulo;
-import models.tn.noticia;
+import models.tl.Articulo;
+import models.tl.ArticuloNoProcesado;
+import models.tl.FuentePorArticulo;
+import models.tl.noticia;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

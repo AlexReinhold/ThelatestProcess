@@ -1,14 +1,14 @@
 package common;
 
-import dao.ArticuloDao;
+import dao.NewsDao;
 import dao.CategoriaDao;
-import dao.NoticiaDao;
-import dao.ProcesosDao;
-import datasource.A3DataSource;
-import datasource.TnDataSource;
+import dao.StoryDao;
+import dao.ProcessDao;
+import datasource.J2DataSource;
+import datasource.TlDataSource;
 import datasource.ttrssDataSource;
-import models.tn.ArticuloNoProcesado;
-import resource.Procesos;
+import models.tl.ArticuloNoProcesado;
+import resource.Process;
 import service.*;
 
 import javax.sql.DataSource;
@@ -18,20 +18,20 @@ import java.util.concurrent.Executors;
 
 class IniciarProceso {
 
-    private DataSource a3Ds, tnDs, ttrssDs;
-    private NoticiaDao noticiaDao;
-    private ArticuloDao articuloDao;
-    private ProcesosDao procesosDao;
+    private DataSource j2Ds, tlDs, ttrssDs;
+    private StoryDao noticiaDao;
+    private NewsDao articuloDao;
+    private ProcessDao procesosDao;
     private CategoriaDao categoriaDao;
 
     IniciarProceso() throws Exception {
-        a3Ds = new A3DataSource().getDatasource();
-        tnDs = new TnDataSource().getDatasource();
+        j2Ds = new J2DataSource().getDatasource();
+        tlDs = new TlDataSource().getDatasource();
         ttrssDs = new ttrssDataSource().getDatasource();
-        noticiaDao = new NoticiaDao(tnDs, a3Ds, ttrssDs);
-        this.categoriaDao = new CategoriaDao(tnDs, a3Ds, ttrssDs);
-        articuloDao = new ArticuloDao(tnDs, a3Ds, ttrssDs);
-        procesosDao = new ProcesosDao(tnDs);
+        noticiaDao = new StoryDao(tlDs, j2Ds, ttrssDs);
+        this.categoriaDao = new CategoriaDao(tlDs, j2Ds, ttrssDs);
+        articuloDao = new NewsDao(tlDs, j2Ds, ttrssDs);
+        procesosDao = new ProcessDao(tlDs);
     }
 
     void iniciar() throws Exception {
@@ -39,42 +39,16 @@ class IniciarProceso {
         String pais = "";
         boolean procensadoFuentes, procesandoCategorias, procesandoNoticias;
 
-
-//        ExecutorService threadPool1 = Executors.newFixedThreadPool(2);
-//        Runnable sinc1 = new SincronizarCategorias(tnDs, a3Ds, ttrssDs);
-//        Runnable sinc2 = new SincronizarFuentes(tnDs, a3Ds, ttrssDs);
-//
-//        procesandoCategorias = procesosDao.estadoDeProceso(Procesos.CATEGORIAS.getId());
-//        procensadoFuentes = procesosDao.estadoDeProceso(Procesos.FUENTES.getId());
-//
-//        if (!procesandoCategorias) {
-//            Thread t1 = new Thread(sinc1);
-//            procesosDao.cambiarEstadoDeProceso(Procesos.CATEGORIAS.getId(), true);
-//            threadPool1.execute(t1);
-//        }
-//        if (!procensadoFuentes) {
-//            Thread t2 = new Thread(sinc2);
-//            procesosDao.cambiarEstadoDeProceso(Procesos.FUENTES.getId(), true);
-//            threadPool1.execute(t2);
-//        }
-//
-//        threadPool1.shutdown();
-//        while (!threadPool1.isTerminated()) {
-//        }
-
-        procesosDao.cambiarEstadoDeProceso(Procesos.CATEGORIAS.getId(), false);
-        procesosDao.cambiarEstadoDeProceso(Procesos.FUENTES.getId(), false);
-
-        procesandoNoticias = procesosDao.estadoDeProceso(Procesos.NOTICIAS.getId());
+        procesandoNoticias = procesosDao.estadoDeProceso(Process.NOTICIAS.getId());
         int threads = Runtime.getRuntime().availableProcessors();
         ExecutorService threadPool2 = Executors.newFixedThreadPool(threads);
-        Runnable sn = new SincronizarNoticias(tnDs, a3Ds, ttrssDs,
-                new ProcesarCluster(noticiaDao.obtenerNoticiasNuevasDeA3()),
-                new ProcesarCuratedNew(articuloDao.obtenerArticulosNuevosDeA3()),
+        Runnable sn = new SincronizarNoticias(tlDs, j2Ds, ttrssDs,
+                new ProcessCluster(noticiaDao.obtenerNoticiasNuevasDeA3()),
+                new ProcessCuratedNews(articuloDao.obtenerArticulosNuevosDeA3()),
                 categoriaDao.categoriaPorTituloTtrss(pais).getId());
 
         if (!procesandoNoticias) {
-            procesosDao.cambiarEstadoDeProceso(Procesos.NOTICIAS.getId(), true);
+            procesosDao.cambiarEstadoDeProceso(Process.NOTICIAS.getId(), true);
             for (int i = 0; i < threads; i++) {
                 Thread t = new Thread(sn);
                 threadPool2.execute(t);
@@ -85,14 +59,14 @@ class IniciarProceso {
         while (!threadPool2.isTerminated()) {
         }
 
-        procesosDao.cambiarEstadoDeProceso(Procesos.NOTICIAS.getId(), false);
+        procesosDao.cambiarEstadoDeProceso(Process.NOTICIAS.getId(), false);
 
         ExecutorService threadPool3 = Executors.newFixedThreadPool(threads);
         if (!procesandoNoticias) {
-            procesosDao.cambiarEstadoDeProceso(Procesos.NOTICIAS.getId(), true);
+            procesosDao.cambiarEstadoDeProceso(Process.NOTICIAS.getId(), true);
             List<ArticuloNoProcesado> articuloNoProcesados = articuloDao.articulosNoProcesados("fecha_sync");
-            Runnable sincronizarFechas = new SincronizarFechasNoticia(tnDs, a3Ds, ttrssDs,
-                    new ProcesarArticulo(articuloNoProcesados));
+            Runnable sincronizarFechas = new SincronizarFechasNoticia(tlDs, j2Ds, ttrssDs,
+                    new ProcessNews(articuloNoProcesados));
 
             for (int i = 0; i < threads; i++) {
                 Thread t = new Thread(sincronizarFechas);
@@ -105,13 +79,13 @@ class IniciarProceso {
         }
         List<ArticuloNoProcesado> articuloNoProcesados = articuloDao.articulosNoProcesados("tags_sync");
         if (!articuloNoProcesados.isEmpty()) {
-            SincronizarTagsNoticia sct = new SincronizarTagsNoticia(tnDs, a3Ds, ttrssDs);
+            SincronizarTagsNoticia sct = new SincronizarTagsNoticia(tlDs, j2Ds, ttrssDs);
             sct.actualizarTagsDeNoticia(articuloNoProcesados);
         }
 
-        NotificacionesTN ntn = new NotificacionesTN(tnDs, a3Ds, ttrssDs);
+        NotificacionesTN ntn = new NotificacionesTN(tlDs, j2Ds, ttrssDs);
         ntn.notificarATN();
-        procesosDao.cambiarEstadoDeProceso(Procesos.NOTICIAS.getId(), false);
+        procesosDao.cambiarEstadoDeProceso(Process.NOTICIAS.getId(), false);
 
         if (noticiaDao.obtenerNoticiasNuevasDeA3().size() > 0) {
             this.iniciar();

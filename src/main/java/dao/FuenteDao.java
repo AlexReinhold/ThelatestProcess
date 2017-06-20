@@ -2,8 +2,8 @@ package dao;
 
 import mapper.tn.FuentePorArticuloRowMapper;
 import mapper.ttrss.SourceRowMapper;
-import models.tn.Fuente;
-import models.tn.FuentePorArticulo;
+import models.tl.Fuente;
+import models.tl.FuentePorArticulo;
 import models.ttrss.Source;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;

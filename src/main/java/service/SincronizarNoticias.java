@@ -1,42 +1,39 @@
 package service;
 
-import common.ProcesarCuratedNew;
-import common.ProcesarCluster;
+import common.ProcessCuratedNews;
+import common.ProcessCluster;
 import dao.*;
-import models.a3.Cluster;
-import models.a3.CuratedNew;
-import models.a3.NewsImg;
-import models.a3.NewsVideo;
-import models.tn.*;
+import models.j2.Cluster;
+import models.j2.CuratedNew;
+import models.j2.NewsImg;
+import models.j2.NewsVideo;
+import models.tl.*;
 import models.ttrss.FeedCategories;
 import models.ttrss.Source;
 import org.apache.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import resource.TipoArchivo;
+import resource.FileType;
 
 import javax.sql.DataSource;
 import java.sql.Timestamp;
 import java.util.List;
 
-/**
- * Created by nlperez on 1/11/17.
- */
 public class SincronizarNoticias implements Runnable {
 
-    private ProcesarCluster procesarCluster;
-    private ProcesarCuratedNew procesarCuratedNew;
-    private ArticuloDao articuloDao;
-    private NoticiaDao noticiaDao;
+    private ProcessCluster procesarCluster;
+    private ProcessCuratedNews procesarCuratedNew;
+    private NewsDao articuloDao;
+    private StoryDao noticiaDao;
     private CategoriaDao categoriaDao;
     private FuenteDao fuenteDao;
     private Logger logger;
     private Integer paisCategoriaId;
 
-    public SincronizarNoticias(DataSource tnDaTaSource, DataSource a3DataSource, DataSource ttrssDateSource, ProcesarCluster pc, ProcesarCuratedNew pcn, Integer paisCategoriaId) {
-        articuloDao = new ArticuloDao(tnDaTaSource, a3DataSource, ttrssDateSource);
-        noticiaDao = new NoticiaDao(tnDaTaSource, a3DataSource, ttrssDateSource);
+    public SincronizarNoticias(DataSource tnDaTaSource, DataSource a3DataSource, DataSource ttrssDateSource, ProcessCluster pc, ProcessCuratedNews pcn, Integer paisCategoriaId) {
+        articuloDao = new NewsDao(tnDaTaSource, a3DataSource, ttrssDateSource);
+        noticiaDao = new StoryDao(tnDaTaSource, a3DataSource, ttrssDateSource);
         categoriaDao = new CategoriaDao(tnDaTaSource, a3DataSource, ttrssDateSource);
         fuenteDao = new FuenteDao(tnDaTaSource, a3DataSource, ttrssDateSource);
         this.procesarCluster = pc;
@@ -201,7 +198,7 @@ public class SincronizarNoticias implements Runnable {
                 videoArticulo.addArticulo(articulo)
                         .addUrl(newsVideo.getContent())
                         .addUrlOriginal(newsVideo.getOriginalContent())
-                        .addTipoArchivo(TipoArchivo.VIDEO.getId())
+                        .addTipoArchivo(FileType.VIDEO.getId())
                         .addAnchura(0)
                         .addAltura(0);
 
@@ -219,7 +216,7 @@ public class SincronizarNoticias implements Runnable {
                 imagenArticulo.addArticulo(articulo)
                         .addUrl(img.getContent().replace("{", "").replace("}", ""))
                         .addUrlOriginal(img.getOriginalContent().replace("{", "").replace("}", ""))
-                        .addTipoArchivo(TipoArchivo.IMAGEN.getId())
+                        .addTipoArchivo(FileType.IMAGEN.getId())
                         .addAnchura(img.getWidth())
                         .addAltura(img.getHeight());
 

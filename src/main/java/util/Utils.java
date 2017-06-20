@@ -4,9 +4,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/**
- * Created by nlperez on 2/2/17.
- */
 public class Utils {
 
     public String nombreCorto(String nombre) {

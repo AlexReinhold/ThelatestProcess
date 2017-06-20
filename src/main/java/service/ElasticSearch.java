@@ -1,8 +1,7 @@
 package service;
 
 import com.google.gson.Gson;
-import dao.NoticiaDao;
-import models.Example;
+import dao.StoryDao;
 import org.apache.log4j.Logger;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
@@ -15,22 +14,18 @@ import javax.sql.DataSource;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-/**
- * Created by nlperez on 3/6/17.
- */
 public class ElasticSearch {
 
-    private NoticiaDao noticiaDao;
+    private StoryDao noticiaDao;
     private Logger logger;
 
     public ElasticSearch(DataSource tnDs, DataSource a3Ds, DataSource ttrssDs) {
-        noticiaDao = new NoticiaDao(tnDs, a3Ds, ttrssDs);
+        noticiaDao = new StoryDao(tnDs, a3Ds, ttrssDs);
         logger = Logger.getLogger("log");
     }
 
     public void test () throws UnknownHostException {
-// on startup
-
+        // on startup
         logger.info("iniciando test");
         Settings settings = Settings.builder()
                 .put("cluster.name", "elasticsearch").build();
@@ -38,9 +33,7 @@ public class ElasticSearch {
                 .addTransportAddress(
                         new InetSocketTransportAddress(
                                 InetAddress.getByName("localhost"), 9300));
-// on shutdown
-
-
+        // on shutdown
         Example tweet = new Example();
         tweet.setId(80);
         tweet.setMessage("jose");
@@ -52,4 +45,5 @@ public class ElasticSearch {
 
         client.close();
     }
+
 }

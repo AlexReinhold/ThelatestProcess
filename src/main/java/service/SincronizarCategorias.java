@@ -1,7 +1,7 @@
 package service;
 
 import dao.CategoriaDao;
-import models.tn.Categoria;
+import models.tl.Categoria;
 import models.ttrss.FeedCategories;
 import org.apache.log4j.Logger;
 import org.springframework.dao.DuplicateKeyException;
@@ -11,9 +11,6 @@ import java.util.List;
 
 import util.ComparadorDeListas;
 
-/**
- * Created by nlperez on 1/31/17.
- */
 public class SincronizarCategorias implements Runnable {
 
     private String pais;

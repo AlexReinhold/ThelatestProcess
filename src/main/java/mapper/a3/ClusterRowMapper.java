@@ -1,6 +1,6 @@
 package mapper.a3;
 
-import models.a3.Cluster;
+import models.j2.Cluster;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

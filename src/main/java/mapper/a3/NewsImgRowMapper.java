@@ -1,6 +1,6 @@
 package mapper.a3;
 
-import models.a3.NewsImg;
+import models.j2.NewsImg;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

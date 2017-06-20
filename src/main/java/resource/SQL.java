@@ -1,8 +1,5 @@
 package resource;
 
-/**
- * Created by nlperez on 1/11/17.
- */
 public class SQL {
 
     public static final class TN {

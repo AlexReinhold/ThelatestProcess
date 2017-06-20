@@ -1,12 +1,12 @@
 package service;
 
-import common.ProcesarArticulo;
-import dao.ArticuloDao;
+import common.ProcessNews;
+import dao.NewsDao;
 import dao.FuenteDao;
-import dao.NoticiaDao;
-import models.tn.FuentePorArticulo;
-import models.tn.ArticuloNoProcesado;
-import models.tn.noticia;
+import dao.StoryDao;
+import models.tl.FuentePorArticulo;
+import models.tl.ArticuloNoProcesado;
+import models.tl.noticia;
 import org.apache.log4j.Logger;
 
 import javax.sql.DataSource;
@@ -14,20 +14,17 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by nlperez on 2/24/17.
- */
 public class SincronizarFechasNoticia implements Runnable {
 
-    private NoticiaDao noticiaDao;
-    private ArticuloDao articuloDao;
+    private StoryDao noticiaDao;
+    private NewsDao articuloDao;
     private FuenteDao fuenteDao;
     private Logger logger;
-    private ProcesarArticulo procesarArticulo;
+    private ProcessNews procesarArticulo;
 
-    public SincronizarFechasNoticia(DataSource tnDs, DataSource a3Ds, DataSource ttrssDs, ProcesarArticulo procesarArticulo) {
-        this.noticiaDao = new NoticiaDao(tnDs, a3Ds, ttrssDs);
-        this.articuloDao = new ArticuloDao(tnDs, a3Ds, ttrssDs);
+    public SincronizarFechasNoticia(DataSource tnDs, DataSource a3Ds, DataSource ttrssDs, ProcessNews procesarArticulo) {
+        this.noticiaDao = new StoryDao(tnDs, a3Ds, ttrssDs);
+        this.articuloDao = new NewsDao(tnDs, a3Ds, ttrssDs);
         this.fuenteDao = new FuenteDao(tnDs, a3Ds, ttrssDs);
         this.procesarArticulo = procesarArticulo;
     }

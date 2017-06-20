@@ -1,8 +1,8 @@
 package mapper.tn;
 
-import models.tn.Fuente;
-import models.tn.FuentePorArticulo;
-import models.tn.Tipofuente;
+import models.tl.Fuente;
+import models.tl.FuentePorArticulo;
+import models.tl.Tipofuente;
 import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;

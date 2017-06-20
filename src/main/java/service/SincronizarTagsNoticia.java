@@ -1,10 +1,10 @@
 package service;
 
-import dao.ArticuloDao;
-import dao.NoticiaDao;
-import models.tn.Articulo;
-import models.tn.ArticuloNoProcesado;
-import models.tn.noticia;
+import dao.NewsDao;
+import dao.StoryDao;
+import models.tl.Articulo;
+import models.tl.ArticuloNoProcesado;
+import models.tl.noticia;
 import org.apache.log4j.Logger;
 import org.springframework.dao.EmptyResultDataAccessException;
 import util.*;
@@ -12,19 +12,16 @@ import util.*;
 import javax.sql.DataSource;
 import java.util.*;
 
-/**
- * Created by nlperez on 2/24/17.
- */
 public class SincronizarTagsNoticia {
 
-    private NoticiaDao noticiaDao;
-    private ArticuloDao articuloDao;
+    private StoryDao noticiaDao;
+    private NewsDao articuloDao;
     private Logger logger;
     private Utils utils;
 
     public SincronizarTagsNoticia(DataSource tnDs, DataSource a3Ds, DataSource ttrssDs) {
-        this.noticiaDao = new NoticiaDao(tnDs, a3Ds, ttrssDs);
-        this.articuloDao = new ArticuloDao(tnDs, a3Ds, ttrssDs);
+        this.noticiaDao = new StoryDao(tnDs, a3Ds, ttrssDs);
+        this.articuloDao = new NewsDao(tnDs, a3Ds, ttrssDs);
         utils = new Utils();
     }
 

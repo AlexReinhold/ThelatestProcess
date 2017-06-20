@@ -1,8 +1,8 @@
 package util;
 
-import models.tn.Categoria;
-import models.tn.Fuente;
-import models.tn.FuentePorArticulo;
+import models.tl.Categoria;
+import models.tl.Fuente;
+import models.tl.FuentePorArticulo;
 import models.ttrss.FeedCategories;
 import models.ttrss.Source;
 
@@ -10,9 +10,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * Created by nlperez on 1/13/17.
- */
 public class ComparadorDeListas {
 
     public HashMap<String, List<Categoria>> CompararCategorias(List<FeedCategories> lista1, List<Categoria> lista2) {

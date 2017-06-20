@@ -1,6 +1,6 @@
 package mapper.tn;
 
-import models.tn.Categoria;
+import models.tl.Categoria;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

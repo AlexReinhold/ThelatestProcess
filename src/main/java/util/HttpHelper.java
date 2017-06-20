@@ -5,9 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.json.JSONObject;
 import org.springframework.web.client.RestTemplate;
 
-/**
- * Created by nlperez on 6/8/17.
- */
 public class HttpHelper {
 
     RestTemplate restTemplate = new RestTemplate();

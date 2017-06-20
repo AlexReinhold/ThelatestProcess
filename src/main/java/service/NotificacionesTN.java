@@ -1,25 +1,21 @@
 package service;
 
-import dao.NoticiaDao;
+import dao.StoryDao;
 import org.apache.log4j.Logger;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import util.HttpHelper;
 import javax.sql.DataSource;
 import java.util.List;
 
-/**
- * Created by nlperez on 6/8/17.
- */
 public class NotificacionesTN {
 
     private Logger logger;
-    private NoticiaDao noticiaDao;
+    private StoryDao noticiaDao;
     private HttpHelper httpHelper;
 
     public NotificacionesTN(DataSource tnDataSource, DataSource a3DataSource, DataSource ttrssDataSource) {
-        noticiaDao = new NoticiaDao(tnDataSource, a3DataSource, ttrssDataSource);
+        noticiaDao = new StoryDao(tnDataSource, a3DataSource, ttrssDataSource);
         httpHelper = new HttpHelper();
     }
 

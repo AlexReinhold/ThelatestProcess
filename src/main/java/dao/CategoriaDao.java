@@ -2,7 +2,7 @@ package dao;
 
 import mapper.ttrss.FeedCategoriesRowMapper;
 import mapper.tn.CategoriaRowMapper;
-import models.tn.Categoria;
+import models.tl.Categoria;
 import models.ttrss.FeedCategories;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
