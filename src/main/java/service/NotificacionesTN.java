@@ -1,0 +1,43 @@
+package service;
+
+import dao.NoticiaDao;
+import org.apache.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import util.HttpHelper;
+import javax.sql.DataSource;
+import java.util.List;
+
+/**
+ * Created by nlperez on 6/8/17.
+ */
+public class NotificacionesTN {
+
+    private Logger logger;
+    private NoticiaDao noticiaDao;
+    private HttpHelper httpHelper;
+
+    public NotificacionesTN(DataSource tnDataSource, DataSource a3DataSource, DataSource ttrssDataSource) {
+        noticiaDao = new NoticiaDao(tnDataSource, a3DataSource, ttrssDataSource);
+        httpHelper = new HttpHelper();
+    }
+
+    public void notificarATN() throws JSONException {
+        logger = Logger.getLogger(NotificacionesTN.class);
+        List<Integer> noticiasNuevas = noticiaDao.noticiasParaNotificacion();
+        if (!noticiasNuevas.isEmpty()) {
+            int[] ids = noticiasNuevas.stream().mapToInt(i -> i).toArray();
+            JSONObject json = new JSONObject().put("noticias", ids);
+            if (httpHelper.notificacionATN(json) == 200) {
+                logger.info("Datos de noticias enviados Correctamente");
+                noticiaDao.eliminarNoticiasDeNotificacion();
+            } else {
+                logger.error("Error enviando notificacion");
+            }
+        } else {
+            logger.info("No hay noticias nuevas, no se enviara notificacion");
+        }
+    }
+
+}
