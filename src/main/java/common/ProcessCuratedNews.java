@@ -5,25 +5,26 @@ import java.util.List;
 
 public class ProcessCuratedNews {
 
-    List<CuratedNew> articulosDeA3;
+    List<CuratedNew> J2News;
 
-    public ProcessCuratedNews(List<CuratedNew> articulosDeA3) {
-        this.articulosDeA3 = articulosDeA3;
+    public ProcessCuratedNews(List<CuratedNew> J2News) {
+        this.J2News = J2News;
     }
 
     public synchronized CuratedNew obtenerCuratedNew() {
-        while (articulosDeA3.isEmpty()) {
+        while (J2News.isEmpty()) {
             try {
                 wait();
             } catch (InterruptedException ex) {
-                System.err.println(ex);
+//                System.err.println(ex);
+                ex.printStackTrace();
             }
         }
         notify();
-        return articulosDeA3.remove(0);
+        return J2News.remove(0);
     }
     public boolean isFinish() {
-        return !articulosDeA3.isEmpty();
+        return !J2News.isEmpty();
     }
 
 }

@@ -2,6 +2,7 @@ package service;
 
 import com.google.gson.Gson;
 import dao.StoryDao;
+import models.tl.Story;
 import org.apache.log4j.Logger;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
@@ -34,12 +35,12 @@ public class ElasticSearch {
                         new InetSocketTransportAddress(
                                 InetAddress.getByName("localhost"), 9300));
         // on shutdown
-        Example tweet = new Example();
-        tweet.setId(80);
-        tweet.setMessage("jose");
+        Story story = new Story();
+        story.addId(80);
+        story.addTitulo("jose");
 
-        IndexRequest indexRequest = new IndexRequest("twitter","tweet", tweet.getId()+"");
-        indexRequest.source(new Gson().toJson(tweet));
+        IndexRequest indexRequest = new IndexRequest("twitter","tweet", story.getId()+"");
+        indexRequest.source(new Gson().toJson(story));
         IndexResponse response = client.index(indexRequest).actionGet();
         logger.info(response);
 

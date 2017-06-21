@@ -2,10 +2,10 @@ package dao;
 
 import javax.sql.DataSource;
 
-import mapper.a3.ClusterRowMapper;
-import mapper.tn.NoticiaRowMapper;
+import mapper.j2.ClusterRowMapper;
+import mapper.tl.StoryRowMapper;
 import models.j2.Cluster;
-import models.tl.noticia;
+import models.tl.Story;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -26,22 +26,22 @@ public class StoryDao {
 
     }
 
-    public noticia noticiaPorId(int id) {
-        return tnTemplate.queryForObject(SQL.TN.SELECTS.NOTICIA_POR_ID, new Object[]{id}, new NoticiaRowMapper<noticia>());
+    public Story noticiaPorId(int id) {
+        return tnTemplate.queryForObject(SQL.TL.SELECTS.NOTICIA_POR_ID, new Object[]{id}, new StoryRowMapper<Story>());
     }
 
-    public noticia noticiaPorSlugTN(String slug) {
-        return tnTemplate.queryForObject(SQL.TN.SELECTS.NOTICIA_POR_SLUG, new Object[]{slug}, new NoticiaRowMapper<noticia>());
+    public Story noticiaPorSlugTN(String slug) {
+        return tnTemplate.queryForObject(SQL.TL.SELECTS.NOTICIA_POR_SLUG, new Object[]{slug}, new StoryRowMapper<Story>());
     }
 
-    public List<noticia> todasLasNoticias() {
-        return tnTemplate.query(SQL.TN.SELECTS.TODAS_LAS_NOTICIAS, new NoticiaRowMapper<noticia>());
+    public List<Story> todasLasNoticias() {
+        return tnTemplate.query(SQL.TL.SELECTS.TODAS_LAS_NOTICIAS, new StoryRowMapper<Story>());
     }
 
-    public noticia nuevaNoticiaTN(final noticia noticia) {
+    public Story nuevaNoticiaTN(final Story noticia) {
         KeyHolder holder = new GeneratedKeyHolder();
         tnTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(SQL.TN.INSERTS.NUEVA_NOTICIA, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement(SQL.TL.INSERTS.NUEVA_NOTICIA, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, noticia.getVistas());
             ps.setInt(2, noticia.getCompartidos());
             ps.setInt(3, noticia.getCategoria().getId());
@@ -59,43 +59,43 @@ public class StoryDao {
 
     public int nuevaNoticiaParaNotificacion(int id) {
         return tnTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(SQL.TN.INSERTS.NUEVA_NOTICIA_NOTIFICACION);
+            PreparedStatement ps = connection.prepareStatement(SQL.TL.INSERTS.NUEVA_NOTICIA_NOTIFICACION);
             ps.setInt(1, id);
             return ps;
         });
     }
 
     public List<Integer> noticiasParaNotificacion() {
-        return tnTemplate.queryForList(SQL.TN.SELECTS.NOTICIAS_PARA_NOTIFICACION, Integer.class);
+        return tnTemplate.queryForList(SQL.TL.SELECTS.NOTICIAS_PARA_NOTIFICACION, Integer.class);
     }
 
     public int eliminarNoticiasDeNotificacion() {
-        return tnTemplate.update(SQL.TN.DELETE.ELIMINAR_NOTICIAS_PARA_NOTIFICACION);
+        return tnTemplate.update(SQL.TL.DELETE.ELIMINAR_NOTICIAS_PARA_NOTIFICACION);
     }
 
     public int actualizarTagsDeNoticia(String tags, int idNoticia) {
-        return tnTemplate.update(SQL.TN.UPDATES.ACTUALIZAR_TAGS_DE_NOTICIA, tags, idNoticia);
+        return tnTemplate.update(SQL.TL.UPDATES.ACTUALIZAR_TAGS_DE_NOTICIA, tags, idNoticia);
     }
 
-    public int actualizarFechasDeNoticia(noticia noticia) {
-        return tnTemplate.update(SQL.TN.UPDATES.ACTUALIZAR_FECHAS_NOTICIA, noticia.getFechaPublicacion(),
+    public int actualizarFechasDeNoticia(Story noticia) {
+        return tnTemplate.update(SQL.TL.UPDATES.ACTUALIZAR_FECHAS_NOTICIA, noticia.getFechaPublicacion(),
                 noticia.getUltimaActualizacion(), noticia.getId());
     }
 
     public int actualizarEstadoDeNoticiaA3(int idNoticia) {
-        return a3Template.update(SQL.A3.UPDATES.CAMBIAR_ESTADO_NOTICIA, true, idNoticia);
+        return a3Template.update(SQL.J2.UPDATES.CAMBIAR_ESTADO_NOTICIA, true, idNoticia);
     }
 
     public List<Cluster> obtenerNoticiasNuevasDeA3() {
-        return a3Template.query(SQL.A3.SELECTS.NOTICIAS_NO_SINCRONIZADAS, new ClusterRowMapper<Cluster>());
+        return a3Template.query(SQL.J2.SELECTS.NOTICIAS_NO_SINCRONIZADAS, new ClusterRowMapper<Cluster>());
     }
 
     public Map<String, Object> fechasNoticia(int idNoticia) {
-        return tnTemplate.queryForMap(SQL.TN.SELECTS.FECHAS_NOTICIA, idNoticia);
+        return tnTemplate.queryForMap(SQL.TL.SELECTS.FECHAS_NOTICIA, idNoticia);
     }
 
-    public int actualizarFuentesDeNoticia(noticia noticia) {
-        return tnTemplate.update(SQL.TN.UPDATES.ACTUALIZAR_NUMERO_FUENTES_NOTICIA, noticia.getNumeroFuentes(), noticia.getId());
+    public int actualizarFuentesDeNoticia(Story noticia) {
+        return tnTemplate.update(SQL.TL.UPDATES.ACTUALIZAR_NUMERO_FUENTES_NOTICIA, noticia.getNumeroFuentes(), noticia.getId());
     }
 
 }

@@ -7,18 +7,18 @@ import javax.sql.DataSource;
 
 public class ProcessDao {
 
-    private JdbcTemplate tnTemplate;
+    private JdbcTemplate thelatestTemplate;
 
     public ProcessDao(DataSource tnDS) {
-        this.tnTemplate = new JdbcTemplate(tnDS);
+        this.thelatestTemplate = new JdbcTemplate(tnDS);
     }
 
-    public boolean estadoDeProceso(int id) {
-        return tnTemplate.queryForObject(SQL.TN.SELECTS.ESTADO_DE_PROCESO, new Object[]{id}, boolean.class);
+    public boolean state(int id) {
+        return thelatestTemplate.queryForObject(SQL.TL.SELECTS.ESTADO_DE_PROCESO, new Object[]{id}, boolean.class);
     }
 
-    public int cambiarEstadoDeProceso(int id, boolean estado) {
-        return tnTemplate.update(SQL.TN.UPDATES.CAMBIAR_ESTADO_PROCESO, estado, id);
+    public int changeState(int id, boolean state) {
+        return thelatestTemplate.update(SQL.TL.UPDATES.CAMBIAR_ESTADO_PROCESO, state, id);
     }
 
 }

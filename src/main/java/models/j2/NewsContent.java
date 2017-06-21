@@ -1,8 +1,5 @@
 package models.j2;
 
-/**
- * Created by nlperez on 1/26/17.
- */
 public class NewsContent {
     private int id;
     private String Content;

@@ -3,9 +3,6 @@ package models.ttrss;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by nlperez on 1/12/17.
- */
 public class FeedCategories {
     private int id;
     private int owner_uid;

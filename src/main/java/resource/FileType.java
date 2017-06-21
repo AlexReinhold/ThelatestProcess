@@ -6,18 +6,18 @@ public enum FileType {
     IMAGEN(2, "IMAGEN");
 
     private int id;
-    private String tipo;
+    private String type;
 
-    FileType(int id, String tipo) {
+    FileType(int id, String type) {
         this.id = id;
-        this.tipo = tipo;
+        this.type = type;
     }
 
     public int getId() {
         return id;
     }
 
-    public String getTipo() {
-        return tipo;
+    public String getType() {
+        return type;
     }
 }

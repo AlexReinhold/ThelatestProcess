@@ -1,8 +1,5 @@
 package models.ttrss;
 
-/**
- * Created by nlperez on 1/16/17.
- */
 public class Source {
     private int id;
     private String title;

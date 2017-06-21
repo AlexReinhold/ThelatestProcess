@@ -2,23 +2,24 @@ package resource;
 
 public enum Process {
 
-    FUENTES(1, "fuentes"),
-    CATEGORIAS(2, "categorias"),
-    NOTICIAS(3, "noticias");
+    SOURCES(1, "sources"),
+    CATEGORIES(2, "categories"),
+    NEWS(3, "news"),
+    STORIES(4, "stories");
 
     private int id;
-    private String nombre;
+    private String name;
 
-    Process(int id, String nombre) {
+    Process(int id, String name) {
         this.id = id;
-        this.nombre = nombre;
+        this.name = name;
     }
 
     public int getId() {
         return id;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getName() {
+        return name;
     }
 }

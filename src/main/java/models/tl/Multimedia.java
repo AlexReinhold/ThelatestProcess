@@ -1,11 +1,8 @@
 package models.tl;
 
-/**
- * Created by nlperez on 4/21/17.
- */
 public class Multimedia {
     private int id;
-    private Articulo articulo;
+    private News articulo;
     private String url;
     private String urlOriginal;
     private int tipoArchivo;
@@ -24,11 +21,11 @@ public class Multimedia {
         return this;
     }
 
-    public Articulo getArticulo() {
+    public News getArticulo() {
         return articulo;
     }
 
-    public Multimedia addArticulo(Articulo articulo) {
+    public Multimedia addArticulo(News articulo) {
         this.articulo = articulo;
         return this;
     }

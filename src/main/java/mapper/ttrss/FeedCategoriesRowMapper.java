@@ -5,9 +5,6 @@ import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- * Created by nlperez on 1/12/17.
- */
 public class FeedCategoriesRowMapper<T> implements RowMapper<FeedCategories> {
 
     public FeedCategories mapRow(ResultSet rs, int rowNumb) throws SQLException{

@@ -1,8 +1,5 @@
 package models.j2;
 
-/**
- * Created by nlperez on 1/25/17.
- */
 public class Cluster {
     private int id;
     private int size;

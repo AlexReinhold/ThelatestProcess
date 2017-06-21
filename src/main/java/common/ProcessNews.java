@@ -1,19 +1,18 @@
 package common;
 
-import models.tl.ArticuloNoProcesado;
-
+import models.tl.UnprocessedNews;
 import java.util.List;
 
 public class ProcessNews {
 
-    List<ArticuloNoProcesado> articuloNoProcesados;
+    List<UnprocessedNews> unprocessedNews;
 
-    public ProcessNews(List<ArticuloNoProcesado> articuloNoProcesados) {
-        this.articuloNoProcesados = articuloNoProcesados;
+    public ProcessNews(List<UnprocessedNews> unprocessedNews) {
+        this.unprocessedNews = unprocessedNews;
     }
 
-    public synchronized ArticuloNoProcesado obtenerArticulo(){
-        while(articuloNoProcesados.isEmpty()){
+    public synchronized UnprocessedNews obtenerArticulo(){
+        while(unprocessedNews.isEmpty()){
             try {
                 wait();
             } catch (InterruptedException e) {
@@ -21,11 +20,11 @@ public class ProcessNews {
             }
         }
         notify();
-        return articuloNoProcesados.remove(0);
+        return unprocessedNews.remove(0);
     }
 
     public boolean isFinish(){
-        return !articuloNoProcesados.isEmpty();
+        return !unprocessedNews.isEmpty();
     }
 
 }

@@ -1,15 +1,15 @@
 package dao;
 
-import mapper.a3.CuratedNewRowMapper;
-import mapper.a3.NewsImgRowMapper;
-import mapper.a3.NewsVideoRowMapper;
-import mapper.tn.ArticuloNoProcesadoRowMapper;
-import mapper.tn.ArticuloRowMapper;
+import mapper.j2.CuratedNewRowMapper;
+import mapper.j2.NewsImgRowMapper;
+import mapper.j2.NewsVideoRowMapper;
+import mapper.tl.NewsNotProcessedRowMapper;
+import mapper.tl.NewsRowMapper;
 import models.j2.CuratedNew;
 import models.j2.NewsImg;
 import models.j2.NewsVideo;
-import models.tl.Articulo;
-import models.tl.ArticuloNoProcesado;
+import models.tl.News;
+import models.tl.UnprocessedNews;
 import models.tl.Multimedia;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -30,14 +30,14 @@ public class NewsDao {
 
     }
 
-    public List<Articulo> articulosPorIdNoticia(int idNoticia) {
-        return tnTemplate.query(SQL.TN.SELECTS.ARTICULOS_POR_ID_NOTICIA, new Object[]{idNoticia}, new ArticuloRowMapper<Articulo>());
+    public List<News> articulosPorIdNoticia(int idNoticia) {
+        return tnTemplate.query(SQL.TL.SELECTS.ARTICULOS_POR_ID_NOTICIA, new Object[]{idNoticia}, new NewsRowMapper<News>());
     }
 
-    public Articulo nuevoArticuloTN(final Articulo articulo) {
+    public News nuevoArticuloTN(final News articulo) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         tnTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(SQL.TN.INSERTS.NUEVO_ARTICULO, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement(SQL.TL.INSERTS.NUEVO_ARTICULO, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, articulo.getTitulo());
             ps.setString(2, articulo.getContenido());
             ps.setString(3, articulo.getContenidoHtml());
@@ -58,25 +58,25 @@ public class NewsDao {
     }
 
     public List<CuratedNew> obtenerArticulosNuevosDeA3() {
-        return a3Template.query(SQL.A3.SELECTS.ARTICULOS_NO_SINCRONIZADOS, new CuratedNewRowMapper<CuratedNew>());
+        return a3Template.query(SQL.J2.SELECTS.ARTICULOS_NO_SINCRONIZADOS, new CuratedNewRowMapper<CuratedNew>());
     }
 
     public int actualizarEstadoDeArticuloA3(int id, boolean estado) {
-        return a3Template.update(SQL.A3.UPDATES.CAMBIAR_ESTADO_ARTICULO, estado, id);
+        return a3Template.update(SQL.J2.UPDATES.CAMBIAR_ESTADO_ARTICULO, estado, id);
     }
 
     public List<NewsVideo> videosPorArticuloA3(int curatedNewId) {
-        return a3Template.query(SQL.A3.SELECTS.VIDEOS_POR_ARTICULO, new Object[]{curatedNewId}, new NewsVideoRowMapper<NewsVideo>());
+        return a3Template.query(SQL.J2.SELECTS.VIDEOS_POR_ARTICULO, new Object[]{curatedNewId}, new NewsVideoRowMapper<NewsVideo>());
     }
 
     public List<NewsImg> imagenesPorArticuloA3(int curatedNewId) {
-        return a3Template.query(SQL.A3.SELECTS.IMAGENES_POR_ARTICULO, new Object[]{curatedNewId}, new NewsImgRowMapper<NewsImg>());
+        return a3Template.query(SQL.J2.SELECTS.IMAGENES_POR_ARTICULO, new Object[]{curatedNewId}, new NewsImgRowMapper<NewsImg>());
     }
 
     public Multimedia nuevoArchivoMultimediaTN(final Multimedia multimedia) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         tnTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(SQL.TN.INSERTS.NUEVO_ARCHIVO_MULTIMEDIA, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement(SQL.TL.INSERTS.NUEVO_ARCHIVO_MULTIMEDIA, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, multimedia.getArticulo().getId());
             ps.setString(2, multimedia.getUrl());
             ps.setString(3, multimedia.getUrlOriginal());
@@ -91,18 +91,18 @@ public class NewsDao {
 
 
 
-    public List<ArticuloNoProcesado> articulosNoProcesados(String field) {
-        return tnTemplate.query(SQL.TN.SELECTS.ARTICULOS_NO_PROCESADOS.replace("*field*", field), new ArticuloNoProcesadoRowMapper<ArticuloNoProcesado>());
+    public List<UnprocessedNews> articulosNoProcesados(String field) {
+        return tnTemplate.query(SQL.TL.SELECTS.ARTICULOS_NO_PROCESADOS.replace("*field*", field), new NewsNotProcessedRowMapper<UnprocessedNews>());
     }
 
-    public List<ArticuloNoProcesado> articulosNoProcesadosAll() {
-        return tnTemplate.query(SQL.TN.SELECTS.ARTICULOS_NO_PROCESADOS_ALL, new ArticuloNoProcesadoRowMapper<ArticuloNoProcesado>());
+    public List<UnprocessedNews> articulosNoProcesadosAll() {
+        return tnTemplate.query(SQL.TL.SELECTS.ARTICULOS_NO_PROCESADOS_ALL, new NewsNotProcessedRowMapper<UnprocessedNews>());
     }
 
-    public int nuevoArticuloNoProcesado(final ArticuloNoProcesado articuloNoProcesado) {
+    public int nuevoArticuloNoProcesado(final UnprocessedNews articuloNoProcesado) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         tnTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(SQL.TN.INSERTS.NUEVO_ARTICULO_NO_PROCESADO, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement(SQL.TL.INSERTS.NUEVO_ARTICULO_NO_PROCESADO, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, articuloNoProcesado.getArticulo().getId());
             return ps;
         }, keyHolder);
@@ -110,12 +110,12 @@ public class NewsDao {
     }
 
 
-    public int actualizarEstadoArticuloNoProcesado(ArticuloNoProcesado articuloNoProcesado, String field, boolean estado) {
-        return tnTemplate.update(SQL.TN.UPDATES.CAMBIAR_ESTADO_ARTICULO_NO_PROCESADO.replace("*field*", field), estado, articuloNoProcesado.getId());
+    public int actualizarEstadoArticuloNoProcesado(UnprocessedNews articuloNoProcesado, String field, boolean estado) {
+        return tnTemplate.update(SQL.TL.UPDATES.CAMBIAR_ESTADO_ARTICULO_NO_PROCESADO.replace("*field*", field), estado, articuloNoProcesado.getId());
     }
 
-    public int eliminarArticuloNoProcesado(ArticuloNoProcesado articuloNoProcesado) {
-        return tnTemplate.update(SQL.TN.DELETE.ELIMINAR_ARTICULO_NO_PROCESADO, articuloNoProcesado.getId());
+    public int eliminarArticuloNoProcesado(UnprocessedNews articuloNoProcesado) {
+        return tnTemplate.update(SQL.TL.DELETE.ELIMINAR_ARTICULO_NO_PROCESADO, articuloNoProcesado.getId());
     }
 
 }

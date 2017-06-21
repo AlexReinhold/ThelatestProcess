@@ -6,7 +6,7 @@ import java.util.stream.Stream;
 
 public class Utils {
 
-    public String nombreCorto(String nombre) {
+    public String shortName(String nombre) {
         String f = nombre.trim();
         StringBuilder sb = new StringBuilder();
         int palabras = 0;

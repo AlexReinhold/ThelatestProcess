@@ -5,9 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 
-/**
- * Created by nlperez on 1/16/17.
- */
 public class SourceRowMapper<T> implements RowMapper<Source> {
 
         public Source mapRow(ResultSet rs, int rowNumb) throws SQLException{

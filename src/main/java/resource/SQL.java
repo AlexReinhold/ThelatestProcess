@@ -2,7 +2,7 @@ package resource;
 
 public class SQL {
 
-    public static final class TN {
+    public static final class TL {
 
         public static class SELECTS {
 
@@ -255,6 +255,17 @@ public class SQL {
                     "FROM articulo " +
                     "WHERE noticia_id = ?";
 
+            public static final String CATEGORY_BY_EXTERNAL_ID = "" +
+                    "SELECT id, " +
+                    "       parent_id, " +
+                    "       name, " +
+                    "       active, " +
+                    "       menu_order " +
+                    "       external_id " +
+                    "       slug " +
+                    "FROM tl_category " +
+                    "WHERE external_id = ? ";
+
         }
 
         public static final class INSERTS {
@@ -397,7 +408,7 @@ public class SQL {
 
     }
 
-    public static final class A3 {
+    public static final class J2 {
 
         public static final class SELECTS {
 
