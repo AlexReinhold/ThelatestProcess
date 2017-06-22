@@ -13,7 +13,7 @@ public class NewsNotProcessedRowMapper<T> implements RowMapper<UnprocessedNews> 
     public UnprocessedNews mapRow(ResultSet rs, int rowNumb) throws SQLException {
         UnprocessedNews unprocessedNews = new UnprocessedNews();
             News news = new News().addId(rs.getInt("articulo_id"))
-                    .addTitulo(rs.getString("titulo"))
+                    .addTitle(rs.getString("titulo"))
                     .addContenidoHtml(rs.getString("contenido_html"))
                     .addAutor(rs.getString("autor"))
                     .addAutorFoto(rs.getString("autor_foto"))

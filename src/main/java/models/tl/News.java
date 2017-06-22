@@ -1,29 +1,27 @@
 package models.tl;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
 public class News {
     private int id;
-    private String titulo;
-    private String contenido;
-    private String contenidoHtml;
-    private Story noticia;
-    private String autor;
-    private String autorFoto;
-    private Timestamp fechaPublicacion;
-    private Timestamp fechaEntrada;
-    private int removido;
-    private String snippet;
-    private String tags;
+    private Story story;
+    private Source source;
     private String url;
-    private List<Multimedia> videos;
-    private List<Multimedia> imagenes;
+    private String externalId;
+    private String title;
+    private String snippet;
+    private String imgUrl;
+    private String author;
+    private int score;
+    private Timestamp pubDate;
+    private Timestamp addedDate;
+    private boolean staffPicks;
+
+    //New items
+    private String content;
+    private String tags;
 
     public News() {
-        this.videos = new ArrayList<>();
-        this.imagenes = new ArrayList<>();
     }
 
     public int getId() {
@@ -35,84 +33,57 @@ public class News {
         return this;
     }
 
-    public String getTitulo() {
-        return titulo;
+    public String getTitle() {
+        return title;
     }
 
-    public News addTitulo(String titulo) {
-        this.titulo = titulo;
+    public News addTitle(String title) {
+        this.title = title;
         return this;
     }
 
-    public String getContenido() {
-        return contenido;
+    public String getContent() {
+        return content;
     }
 
-    public News addContenido(String contenido) {
-        this.contenido = contenido;
+    public News addContent(String content) {
+        this.content = content;
         return this;
     }
 
-    public String getContenidoHtml() {
-        return contenidoHtml;
+    public Story getStory() {
+        return story;
     }
 
-    public News addContenidoHtml(String contenidoHtml) {
-        this.contenidoHtml = contenidoHtml;
+    public News addStory(Story story) {
+        this.story = story;
         return this;
     }
 
-    public Story getNoticia() {
-        return noticia;
+    public String getAuthor() {
+        return author;
     }
 
-    public News addNoticia(Story noticia) {
-        this.noticia = noticia;
+    public News addAuthor(String author) {
+        this.author = author;
         return this;
     }
 
-    public String getAutor() {
-        return autor;
+    public Timestamp getPubDate() {
+        return pubDate;
     }
 
-    public News addAutor(String autor) {
-        this.autor = autor;
+    public News addPubDate(Timestamp pubDate) {
+        this.pubDate = pubDate;
         return this;
     }
 
-    public String getAutorFoto() {
-        return autorFoto;
+    public Timestamp getAddedDate() {
+        return addedDate;
     }
 
-    public News addAutorFoto(String autorFoto) {
-        this.autorFoto = autorFoto;
-        return this;
-    }
-
-    public Timestamp getFechaPublicacion() {
-        return fechaPublicacion;
-    }
-
-    public News addFechaPublicacion(Timestamp fechaPublicacion) {
-        this.fechaPublicacion = fechaPublicacion;
-        return this;
-    }
-
-    public Timestamp getFechaEntrada() {
-        return fechaEntrada;
-    }
-
-    public News addFechaEntrada(Timestamp fechaEntrada) {
-        this.fechaEntrada = fechaEntrada;
-        return this;
-    }
-
-    public int getRemovido() {
-        return removido;
-    }
-
-    public News addRemovido(int removido) {
-        this.removido = removido;
+    public News addAddedDate(Timestamp addedDate) {
+        this.addedDate = addedDate;
         return this;
     }
 
@@ -143,21 +114,49 @@ public class News {
         return this;
     }
 
-    public List<Multimedia> getVideos() {
-        return videos;
+    public Source getSource() {
+        return source;
     }
 
-    public News addVideos(List<Multimedia> videos) {
-        this.videos = videos;
+    public News addSource(Source source) {
+        this.source = source;
         return this;
     }
 
-    public List<Multimedia> getImagenes() {
-        return imagenes;
+    public String getExternalId() {
+        return externalId;
     }
 
-    public News addImagenes(List<Multimedia> imagenes) {
-        this.imagenes = imagenes;
+    public News addExternalId(String externalId) {
+        this.externalId = externalId;
         return this;
     }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public News addImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+        return this;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public News addScore(int score) {
+        this.score = score;
+        return this;
+    }
+
+    public boolean isStaffPicks() {
+        return staffPicks;
+    }
+
+    public News addStaffPicks(boolean staffPicks) {
+        this.staffPicks = staffPicks;
+        return this;
+    }
+
 }

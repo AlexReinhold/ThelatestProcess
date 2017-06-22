@@ -37,7 +37,7 @@ public class ElasticSearch {
         // on shutdown
         Story story = new Story();
         story.addId(80);
-        story.addTitulo("jose");
+        story.addName("jose");
 
         IndexRequest indexRequest = new IndexRequest("twitter","tweet", story.getId()+"");
         indexRequest.source(new Gson().toJson(story));

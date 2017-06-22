@@ -20,12 +20,10 @@ public class CuratedNew {
     private boolean clustered;
     private boolean synchronizeD;
     private NewsContent newsContent;
-    private String tags;
     private Cluster cluster;
-    private List<NewsImg> images;
+    private String image;
 
     public CuratedNew() {
-        this.images = new ArrayList<>();
     }
 
     public int getId() {
@@ -145,15 +143,6 @@ public class CuratedNew {
         return this;
     }
 
-    public String getTags() {
-        return tags;
-    }
-
-    public CuratedNew addTags(String tags) {
-        this.tags = tags;
-        return this;
-    }
-
     public Cluster getCluster() {
         return cluster;
     }
@@ -163,12 +152,13 @@ public class CuratedNew {
         return this;
     }
 
-    public List<NewsImg> getImages() {
-        return images;
+    public String getImage() {
+        return image;
     }
 
-    public CuratedNew addImages(List<NewsImg> images) {
-        this.images = images;
+    public CuratedNew addImage(String image) {
+        this.image = image;
         return this;
     }
+
 }

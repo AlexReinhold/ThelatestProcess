@@ -14,11 +14,11 @@ public class ProcessDao {
     }
 
     public boolean state(int id) {
-        return thelatestTemplate.queryForObject(SQL.TL.SELECTS.ESTADO_DE_PROCESO, new Object[]{id}, boolean.class);
+        return thelatestTemplate.queryForObject(SQL.TL.SELECTS.PROCESS_STATE, new Object[]{id}, boolean.class);
     }
 
     public int changeState(int id, boolean state) {
-        return thelatestTemplate.update(SQL.TL.UPDATES.CAMBIAR_ESTADO_PROCESO, state, id);
+        return thelatestTemplate.update(SQL.TL.UPDATES.CHANGE_PROCESS_STATE, state, id);
     }
 
 }

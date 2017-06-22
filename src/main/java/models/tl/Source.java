@@ -2,24 +2,23 @@ package models.tl;
 
 public class Source {
     private int id;
-    private String nombre;
+    private String name;
+    private String section;
+    private String externalId;
+    private String alias;
+    private String sourceFeedUrl;
     private String url;
-    private int idExterno;
-    private String slug;
-    private String nombreCorto;
-    private String favicon;
+    private String iconUrl;
 
     public Source() {
     }
 
-    public Source(int id, String nombre, String url, int idExterno, String slug, String nombreCorto, String favicon) {
+    public Source(int id, String name, String url, String externalId, String iconUrl) {
         this.id = id;
-        this.nombre = nombre;
+        this.name = name;
         this.url = url;
-        this.idExterno = idExterno;
-        this.slug = slug;
-        this.nombreCorto = nombreCorto;
-        this.favicon = favicon;
+        this.externalId = externalId;
+        this.iconUrl = iconUrl;
     }
 
     public int getId() {
@@ -31,12 +30,12 @@ public class Source {
         return this;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getName() {
+        return name;
     }
 
-    public Source addNombre(String nombre) {
-        this.nombre = nombre;
+    public Source addName(String name) {
+        this.name = name;
         return this;
     }
 
@@ -49,39 +48,48 @@ public class Source {
         return this;
     }
 
-    public int getIdExterno() {
-        return idExterno;
+    public String getExternalId() {
+        return externalId;
     }
 
-    public Source addIdExterno(int idExterno) {
-        this.idExterno = idExterno;
+    public Source addExternalId(String externalId) {
+        this.externalId = externalId;
         return this;
     }
 
-    public String getSlug() {
-        return slug;
+    public String getIconUrl() {
+        return iconUrl;
     }
 
-    public Source addSlug(String slug) {
-        this.slug = slug;
+    public Source addIconUrl(String iconUrl) {
+        this.iconUrl = iconUrl;
         return this;
     }
 
-    public String getNombreCorto() {
-        return nombreCorto;
+    public String getSection() {
+        return section;
     }
 
-    public Source addNombreCorto(String nombreCorto) {
-        this.nombreCorto = nombreCorto;
+    public Source addSection(String section) {
+        this.section = section;
         return this;
     }
 
-    public String getFavicon() {
-        return favicon;
+    public String getAlias() {
+        return alias;
     }
 
-    public Source addFavicon(String favicon) {
-        this.favicon = favicon;
+    public Source addAlias(String alias) {
+        this.alias = alias;
+        return this;
+    }
+
+    public String getSourceFeedUrl() {
+        return sourceFeedUrl;
+    }
+
+    public Source addSourceFeedUrl(String sourceFeedUrl) {
+        this.sourceFeedUrl = sourceFeedUrl;
         return this;
     }
 }

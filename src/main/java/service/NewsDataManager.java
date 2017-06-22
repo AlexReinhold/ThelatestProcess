@@ -5,17 +5,13 @@ import dao.SourceDao;
 import dao.NewsDao;
 import dao.StoryDao;
 import models.j2.CuratedNew;
-import models.j2.NewsImg;
-import models.j2.NewsVideo;
 import models.tl.*;
-import models.ttrss.Source;
+import models.tl.Source;
 import org.apache.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import resource.FileType;
 
 import javax.sql.DataSource;
-import java.util.List;
 
 public class NewsDataManager implements Runnable {
 
@@ -51,51 +47,42 @@ public class NewsDataManager implements Runnable {
 
     private int syncNews(CuratedNew curatedNew) {
 
-        Source source = fuenteDao.fuenteDesdeTtrssPorId(curatedNew.getSource().getId());
-//        FuentePorArticulo fpa = fuenteDao.fuenteDesdeTNPorSlug(source.getSlug());
-        Story noticia;
+        Source source = fuenteDao.sourceByExternalId(curatedNew.getSource().getId()+"");
+
+        Story story;
         try {
-            noticia = storyDao.noticiaPorSlugTN(curatedNew.getCluster().getSlug());
+            story = storyDao.storyBySlug(curatedNew.getCluster().getSlug());
         } catch (EmptyResultDataAccessException e) {
-            logger.error("Noticia no encontrada de acuerdo al slug -> " + curatedNew.getCluster().getSlug());
+            logger.error("story not found by slug -> " + curatedNew.getCluster().getSlug());
             return 0;
         }
 
-        String contenidoHtml = "";
-        if (!curatedNew.getNewsContent().getRawText().equals("")) {
-            contenidoHtml = curatedNew.getNewsContent().getRawText();
-            StringBuilder sb = new StringBuilder();
-            for (String parrafo : contenidoHtml.split("\n")) {
-                sb.append(parrafo).append("<br/>");
-            }
-            contenidoHtml = sb.toString();
-        }
-
-        News articulo = new News();
-        articulo.addTitulo(curatedNew.getTitle())
-                .addContenido(curatedNew.getNewsContent().getRawText())
-                .addContenidoHtml(contenidoHtml)
-                .addAutor(curatedNew.getAuthor())
-                .addAutorFoto("")
-                .addFechaPublicacion(curatedNew.getPubDate())
-                .addFechaEntrada(curatedNew.getDateEntered())
-                .addRemovido(0)
-                .addSnippet(curatedNew.getSnippet())
-                .addTags(curatedNew.getTags())
+        News news = new News();
+        news.addStory(story)
+                .addSource(source)
                 .addUrl(curatedNew.getLink())
-                .addNoticia(noticia);
+                .addExternalId(curatedNew.getId()+"")
+                .addTitle(curatedNew.getTitle())
+                .addSnippet(curatedNew.getSnippet())
+                .addImgUrl(curatedNew.getImage())
+                .addAuthor(curatedNew.getAuthor())
+                .addScore(0)
+                .addPubDate(curatedNew.getPubDate())
+                .addAddedDate(curatedNew.getDateEntered())
+                .addStaffPicks(false)
+                .addContent(curatedNew.getNewsContent().getRawText())
+                .addTags("")
+        ;
         try {
-            articulo = newsDao.nuevoArticuloTN(articulo);
-            if (articulo.getId() > 0) {
-                newsDao.nuevoArticuloNoProcesado(new UnprocessedNews().addArticulo(articulo));
-                newsDao.actualizarEstadoDeArticuloA3(curatedNew.getId(), true);
-                this.SincronizarMultimediaTN(articulo, curatedNew);
+            news = newsDao.insertNews(news);
+            if (news.getId() > 0) {
+                newsDao.updateNewsStateJ2(curatedNew.getId(), true);
                 return 1;
             } else {
-                logger.error("articulo no registrado en TN " + articulo.getTitulo());
+                logger.error("articulo no registrado en TN " + news.getTitle());
             }
         } catch (DataIntegrityViolationException e) {
-            logger.error("Slug de noticia : " + noticia.getSlug() + " id " + noticia.getId());
+            logger.error("Slug de noticia : " + story.getSlug() + " id " + story.getId());
             System.err.println(e.getMessage());
             logger.error(e.getMessage());
             logger.error(e.getCause());
@@ -104,45 +91,6 @@ public class NewsDataManager implements Runnable {
         return 0;
     }
 
-    private void SincronizarMultimediaTN(News articulo, CuratedNew curatedNew) {
-
-        List<NewsVideo> videos = newsDao.videosPorArticuloA3(curatedNew.getId());
-        if (!videos.isEmpty()) {
-            logger.info(videos.size() + " video(s) para el articulo -> " + articulo.getId());
-            for (NewsVideo newsVideo : videos) {
-                Multimedia videoArticulo = new Multimedia();
-                videoArticulo.addArticulo(articulo)
-                        .addUrl(newsVideo.getContent())
-                        .addUrlOriginal(newsVideo.getOriginalContent())
-                        .addTipoArchivo(FileType.VIDEO.getId())
-                        .addAnchura(0)
-                        .addAltura(0);
-
-                videoArticulo = newsDao.nuevoArchivoMultimediaTN(videoArticulo);
-                if (videoArticulo.getId() < 1) {
-                    logger.error("Error al registrar video para el articulo " + articulo.getId());
-                }
-            }
-        }
-
-        List<NewsImg> imagenes = newsDao.imagenesPorArticuloA3(curatedNew.getId());
-        if (!imagenes.isEmpty()) {
-            for (NewsImg img : imagenes) {
-                Multimedia imagenArticulo = new Multimedia();
-                imagenArticulo.addArticulo(articulo)
-                        .addUrl(img.getContent().replace("{", "").replace("}", ""))
-                        .addUrlOriginal(img.getOriginalContent().replace("{", "").replace("}", ""))
-                        .addTipoArchivo(FileType.IMAGEN.getId())
-                        .addAnchura(img.getWidth())
-                        .addAltura(img.getHeight());
-
-                imagenArticulo = newsDao.nuevoArchivoMultimediaTN(imagenArticulo);
-                if (imagenArticulo.getId() < 1) {
-                    logger.error("Error al registrar imgagen para el articulo " + articulo.getId());
-                }
-            }
-        }
-    }
 }
 
 

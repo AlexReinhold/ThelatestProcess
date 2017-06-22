@@ -23,7 +23,6 @@ public class StoryDataManager implements Runnable {
         this.processCluster = pc;
     }
 
-
     public void run() {
         long inicio = System.currentTimeMillis();
         logger = Logger.getLogger(Thread.currentThread().getName());
@@ -42,33 +41,32 @@ public class StoryDataManager implements Runnable {
     }
 
     private int syncStories(Cluster cluster) {
-        Story noticia = new Story();
-        noticia.addVistas(0)
-                .addCompartidos(0);
+        Story story = new Story();
+        story.addViews(0)
+                .addShares(0);
 
-        Category categoria = categoryDao.getByExternalId(cluster.getMainCatId()+"");
-        noticia.addCategoria(categoria);
+        Category categoria = categoryDao.getByExternalId(cluster.getSubCatId()+"");
+        story.addCategory(categoria);
 
-        noticia.addPosicion(0) // 0 mientras averiguamos para q coño es esto
-                .addTitulo(cluster.getTittle())
-                .addIdExterno(cluster.getId())
-                .addSlug(cluster.getSlug())
-                .addDeadLine(new Timestamp(System.currentTimeMillis())) // por ahora currentdate
-                .addTags("");
+        story.addPosition(0)
+            .addName(cluster.getTittle())
+            .addExternalId(cluster.getId())
+            .addSlug(cluster.getSlug())
+            .addDeadLine(null)
+            .addTags("");
 
         try {
-            noticia = storyDao.nuevaNoticiaTN(noticia);
-            if (noticia.getId() > 0) {
-                storyDao.actualizarEstadoDeNoticiaA3(cluster.getId());
-                storyDao.nuevaNoticiaParaNotificacion(noticia.getId());
+            story = storyDao.insertStory(story);
+            if (story.getId() > 0) {
+                storyDao.updateStoryStateJ2(cluster.getId());
                 return 1;
             } else {
-                logger.error("Noticia no registrada tn TN " + noticia.getTitulo());
+                logger.error("Story not registered" + story.getName());
             }
         } catch (DuplicateKeyException e) {
-            logger.error("Slug de noticia duplicado: " + noticia.getSlug() + " No fue sincronizada");
+            logger.error("slug or externalId duplicated: " + story.getSlug() + " No fue sincronizada");
             logger.info("-----------------------------------------------------");
-            storyDao.actualizarEstadoDeNoticiaA3(cluster.getId());
+            storyDao.updateStoryStateJ2(cluster.getId());
         }
         return 0;
     }

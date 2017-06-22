@@ -6,23 +6,24 @@ import java.util.List;
 
 public class Story {
     private int id;
-    private int vistas;
-    private int compartidos;
-    private Category categoria;
-    private int posicion;
-    private String titulo;
-    private int idExterno;
+    private Category category;
+    private String name;
+    private int externalId;
     private String slug;
+    private int views;
     private Timestamp deadLine;
+    private int position;
+
+    //New items
+    private int shares;
     private String tags;
-    private Timestamp fechaPublicacion;
-    private Timestamp ultimaActualizacion;
-    private int numeroFuentes;
-    private List<News> articulos;
-    private int porcentajeBusqueda;
+    private Timestamp pubDate;
+    private Timestamp lastUpdate;
+    private int sourcesNumber;
+    private List<News> news;
 
     public Story() {
-        articulos = new ArrayList<News>();
+        news = new ArrayList<News>();
     }
 
     public int getId() {
@@ -34,57 +35,57 @@ public class Story {
         return this;
     }
 
-    public int getVistas() {
-        return vistas;
+    public int getViews() {
+        return views;
     }
 
-    public Story addVistas(int vistas) {
-        this.vistas = vistas;
+    public Story addViews(int views) {
+        this.views = views;
         return this;
     }
 
-    public int getCompartidos() {
-        return compartidos;
+    public int getShares() {
+        return shares;
     }
 
-    public Story addCompartidos(int compartidos) {
-        this.compartidos = compartidos;
+    public Story addShares(int shares) {
+        this.shares = shares;
         return this;
     }
 
-    public Category getCategoria() {
-        return categoria;
+    public Category getCategory() {
+        return category;
     }
 
-    public Story addCategoria(Category categoria) {
-        this.categoria = categoria;
+    public Story addCategory(Category category) {
+        this.category = category;
         return this;
     }
 
-    public int getPosicion() {
-        return posicion;
+    public int getPosition() {
+        return position;
     }
 
-    public Story addPosicion(int posicion) {
-        this.posicion = posicion;
+    public Story addPosition(int position) {
+        this.position = position;
         return this;
     }
 
-    public String getTitulo() {
-        return titulo;
+    public String getName() {
+        return name;
     }
 
-    public Story addTitulo(String titulo) {
-        this.titulo = titulo;
+    public Story addName(String name) {
+        this.name = name;
         return this;
     }
 
-    public int getIdExterno() {
-        return idExterno;
+    public int getExternalId() {
+        return externalId;
     }
 
-    public Story addIdExterno(int idExterno) {
-        this.idExterno = idExterno;
+    public Story addExternalId(int externalId) {
+        this.externalId = externalId;
         return this;
     }
 
@@ -115,49 +116,41 @@ public class Story {
         return this;
     }
 
-    public Timestamp getFechaPublicacion() {
-        return fechaPublicacion;
+    public Timestamp getPubDate() {
+        return pubDate;
     }
 
-    public Story addFechaPublicacion(Timestamp fechaPublicacion) {
-        this.fechaPublicacion = fechaPublicacion;
+    public Story addPubDate(Timestamp pubDate) {
+        this.pubDate = pubDate;
         return this;
     }
 
-    public Timestamp getUltimaActualizacion() {
-        return ultimaActualizacion;
+    public Timestamp getLastUpdate() {
+        return lastUpdate;
     }
 
-    public Story addUltimaActualizacion(Timestamp ultimaActualizacion) {
-        this.ultimaActualizacion = ultimaActualizacion;
+    public Story addLastUpdate(Timestamp lastUpdate) {
+        this.lastUpdate = lastUpdate;
         return this;
     }
 
-    public int getNumeroFuentes() {
-        return numeroFuentes;
+    public int getSourcesNumber() {
+        return sourcesNumber;
     }
 
-    public Story addNumeroFuentes(int numeroFuentes) {
-        this.numeroFuentes = numeroFuentes;
+    public Story addSourcesNumber(int sourcesNumber) {
+        this.sourcesNumber = sourcesNumber;
         return this;
     }
 
-    public List<News> getArticulos() {
-        return articulos;
+    public List<News> getNews() {
+        return news;
     }
 
-    public Story addArticulos(List<News> articulos) {
-        this.articulos = articulos;
+    public Story addNews(List<News> news) {
+        this.news = news;
         return this;
     }
 
-    public int getPorcentajeBusqueda() {
-        return porcentajeBusqueda;
-    }
-
-    public Story addPorcentajeBusqueda(int porcentajeBusqueda) {
-        this.porcentajeBusqueda = porcentajeBusqueda;
-        return this;
-    }
 }
 

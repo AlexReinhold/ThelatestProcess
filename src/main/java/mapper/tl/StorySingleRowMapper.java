@@ -11,12 +11,12 @@ public class StorySingleRowMapper<T> implements RowMapper<Story> {
     public Story mapRow(ResultSet rs, int rowNumb) throws SQLException {
         Story story = new Story();
         story.addId(rs.getInt("id"));
-        story.addVistas(rs.getInt("vistas"));
-        story.addCompartidos(rs.getInt("compartidos"));
-        story.addCategoria(new Category().addId(rs.getInt("categoria_id")));
-        story.addPosicion(rs.getInt("posicion"));
-        story.addTitulo(rs.getString("titulo"));
-        story.addIdExterno(rs.getInt("id_externo"));
+        story.addViews(rs.getInt("vistas"));
+        story.addShares(rs.getInt("compartidos"));
+        story.addCategory(new Category().addId(rs.getInt("categoria_id")));
+        story.addPosition(rs.getInt("posicion"));
+        story.addName(rs.getString("titulo"));
+        story.addExternalId(rs.getInt("id_externo"));
         story.addSlug(rs.getString("slug"));
         story.addDeadLine(rs.getTimestamp("deadline"));
         story.addTags(rs.getString("tags"));

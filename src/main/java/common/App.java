@@ -10,8 +10,8 @@ public class App {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
         System.setProperty("current.date", sdf.format(date));
-        BeginProcess iniciarProceso = new BeginProcess();
-        iniciarProceso.start();
+        BeginProcess beginProcess = new BeginProcess();
+        beginProcess.start();
 
 
     }

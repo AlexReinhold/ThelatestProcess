@@ -40,7 +40,7 @@ class BeginProcess {
 
             ExecutorService threadPool1 = Executors.newFixedThreadPool(threads);
             Runnable storyDataManager = new StoryDataManager(tlDs, j2Ds, ttrssDs,
-                    new ProcessCluster(storyDao.obtenerNoticiasNuevasDeA3()));
+                    new ProcessCluster(storyDao.getClusterListFromJ2()));
 
             for (int i = 0; i < threads; i++) {
                 Thread t = new Thread(storyDataManager);
@@ -53,7 +53,7 @@ class BeginProcess {
 
             ExecutorService threadPool2 = Executors.newFixedThreadPool(threads);
             Runnable newsDataManager = new NewsDataManager(tlDs, j2Ds, ttrssDs,
-                    new ProcessCuratedNews(newsDao.obtenerArticulosNuevosDeA3()));
+                    new ProcessCuratedNews(newsDao.getCuratedNewsListFromJ2()));
 
             for (int i = 0; i < threads; i++) {
                 Thread t = new Thread(newsDataManager);
@@ -66,7 +66,7 @@ class BeginProcess {
 
             processDao.changeState(Process.NEWS.getId(), false);
 
-            if (storyDao.obtenerNoticiasNuevasDeA3().size() > 0) {
+            if (storyDao.getClusterListFromJ2().size() > 0) {
                 this.start();
             }
 

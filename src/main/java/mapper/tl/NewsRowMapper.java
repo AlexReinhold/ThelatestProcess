@@ -11,8 +11,8 @@ public class NewsRowMapper<T> implements RowMapper<News> {
     public News mapRow(ResultSet rs, int rowNumb) throws SQLException {
         News news = new News();
         news.addId(rs.getInt("id"))
-                .addTitulo(rs.getString("titulo"))
-                .addContenido(rs.getString("contenido"))
+                .addTitle(rs.getString("titulo"))
+                .addContent(rs.getString("contenido"))
                 .addContenidoHtml(rs.getString("contenido_html"))
                 .addAutor(rs.getString("autor"))
                 .addAutorFoto(rs.getString("autor_foto"))
