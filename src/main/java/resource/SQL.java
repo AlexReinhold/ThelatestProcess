@@ -29,8 +29,8 @@ public class SQL {
                     "WHERE n.slug = ? ";
 
             public static final String PROCESS_STATE = "" +
-                    "SELECT estado " +
-                    "FROM procesos " +
+                    "SELECT state " +
+                    "FROM tl_process " +
                     "WHERE id = ?";
 
             public static final String CATEGORY_BY_EXTERNAL_ID = "" +
@@ -55,6 +55,16 @@ public class SQL {
                     "       icon_url " +
                     "FROM tl_source " +
                     "WHERE external_id = ? ";
+
+            public static final String STORY_BY_ID_FOR_ES = "" +
+                    "SELECT id, " +
+                    "       name, " +
+                    "       slug, " +
+                    "       position, " +
+                    "       deadline, " +
+                    "       (select count(*) from tl_news where story_id = s.id group by id) newsCount " +
+                    "FROM tl_story s" +
+                    "WHERE id = ? ";
 
         }
 

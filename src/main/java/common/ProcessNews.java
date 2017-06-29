@@ -1,6 +1,6 @@
 package common;
 
-import models.tl.UnprocessedNews;
+import model.tl.UnprocessedNews;
 import java.util.List;
 
 public class ProcessNews {

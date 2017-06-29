@@ -2,13 +2,12 @@ package service;
 
 import common.ProcessCluster;
 import dao.*;
-import models.j2.Cluster;
-import models.tl.*;
+import model.j2.Cluster;
+import model.tl.*;
 import org.apache.log4j.Logger;
 import org.springframework.dao.DuplicateKeyException;
-
 import javax.sql.DataSource;
-import java.sql.Timestamp;
+import java.util.Optional;
 
 public class StoryDataManager implements Runnable {
 
@@ -29,7 +28,9 @@ public class StoryDataManager implements Runnable {
         int i = 0;
         while (processCluster.isFinish()) {
             Cluster cluster = processCluster.obtenerCluster();
-            if (syncStories(cluster) == 1) {
+            Optional<Story> story = syncStories(cluster);
+            if (story.isPresent()) {
+                processCluster.addCompleted(story.get().getId());
                 i++;
             }
         }
@@ -40,7 +41,7 @@ public class StoryDataManager implements Runnable {
         logger.info("-----------------------------------------------------");
     }
 
-    private int syncStories(Cluster cluster) {
+    private Optional<Story> syncStories(Cluster cluster) {
         Story story = new Story();
         story.addViews(0)
                 .addShares(0);
@@ -56,10 +57,10 @@ public class StoryDataManager implements Runnable {
             .addTags("");
 
         try {
-            story = storyDao.insertStory(story);
+            storyDao.insertStory(story);
             if (story.getId() > 0) {
                 storyDao.updateStoryStateJ2(cluster.getId());
-                return 1;
+                return Optional.of(story);
             } else {
                 logger.error("Story not registered" + story.getName());
             }
@@ -68,7 +69,7 @@ public class StoryDataManager implements Runnable {
             logger.info("-----------------------------------------------------");
             storyDao.updateStoryStateJ2(cluster.getId());
         }
-        return 0;
+        return Optional.empty();
     }
 
 }

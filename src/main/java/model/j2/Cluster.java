@@ -1,4 +1,4 @@
-package models.j2;
+package model.j2;
 
 public class Cluster {
     private int id;

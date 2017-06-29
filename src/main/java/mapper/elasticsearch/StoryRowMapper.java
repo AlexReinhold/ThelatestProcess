@@ -1,8 +1,8 @@
-package mapper.tl;
+package mapper.elasticsearch;
 
-import model.tl.Category;
-import model.tl.Story;
+import model.elasticsearch.Story;
 import org.springframework.jdbc.core.RowMapper;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 

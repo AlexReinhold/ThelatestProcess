@@ -1,9 +1,9 @@
 package mapper.j2;
 
-import models.j2.Cluster;
-import models.j2.CuratedNew;
-import models.j2.NewsContent;
-import models.ttrss.Source;
+import model.j2.Cluster;
+import model.j2.CuratedNew;
+import model.j2.NewsContent;
+import model.ttrss.Source;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -34,7 +34,7 @@ public class CuratedNewRowMapper<T> implements RowMapper<CuratedNew> {
             nc.addKeywords(rs.getString("nc_keywords"));
             nc.addRawText(rs.getString("nc_raw_text"));
         cn.addNewsContent(nc);
-        cn.addTags(rs.getString("cn_tags"));
+//        cn.addTags(rs.getString("cn_tags"));
             Cluster c = new Cluster();
             c.addId(rs.getInt("c_id"));
             c.addSize(rs.getInt("c_size"));

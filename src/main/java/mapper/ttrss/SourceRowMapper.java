@@ -1,6 +1,6 @@
 package mapper.ttrss;
 
-import models.ttrss.Source;
+import model.ttrss.Source;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;

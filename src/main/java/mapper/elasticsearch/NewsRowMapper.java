@@ -1,6 +1,6 @@
-package mapper.tl;
+package mapper.elasticsearch;
 
-import model.tl.*;
+import model.elasticsearch.News;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

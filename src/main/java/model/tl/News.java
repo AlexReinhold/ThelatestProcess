@@ -1,4 +1,4 @@
-package models.tl;
+package model.tl;
 
 import java.sql.Timestamp;
 

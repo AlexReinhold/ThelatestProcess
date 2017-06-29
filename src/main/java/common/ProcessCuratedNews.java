@@ -1,6 +1,6 @@
 package common;
 
-import models.j2.CuratedNew;
+import model.j2.CuratedNew;
 import java.util.List;
 
 public class ProcessCuratedNews {
