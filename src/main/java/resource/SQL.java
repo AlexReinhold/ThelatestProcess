@@ -57,14 +57,24 @@ public class SQL {
                     "WHERE external_id = ? ";
 
             public static final String STORY_BY_ID_FOR_ES = "" +
-                    "SELECT id, " +
-                    "       name, " +
-                    "       slug, " +
-                    "       position, " +
-                    "       deadline, " +
-                    "       (select count(*) from tl_news where story_id = s.id group by id) newsCount " +
+                    "SELECT s.id, " +
+                    "       s.name, " +
+                    "       s.slug, " +
+                    "       s.position, " +
+                    "       s.deadline, " +
+                    "       c.id as category_id, " +
+                    "       c.slug as category_slug, " +
+                    "       c.name as category_name, " +
+                    "       pc.slug as category_parent, " +
+                    "       (select count(*) from tl_news where story_id = s.id group by id) newsCount, " +
+                    "       (select count(*) from tl_news where story_id = s.id group by id) newsCount, " +
+                    "       (select count(*) from tl_news where story_id = s.id group by id) newsCount, " +
                     "FROM tl_story s" +
+                    "INNER JOIN tl_category c on c.id = s.category_id " +
+                    "LEFT JOIN tl_category pc on pc.id = c.parent_id " +
                     "WHERE id = ? ";
+
+
 
         }
 

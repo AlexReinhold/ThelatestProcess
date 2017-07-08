@@ -5,7 +5,6 @@ import dao.StoryDao;
 import model.elasticsearch.News;
 import model.elasticsearch.Story;
 import model.elasticsearch.WTM;
-import model.j2.Cluster;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;

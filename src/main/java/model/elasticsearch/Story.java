@@ -1,5 +1,6 @@
 package model.elasticsearch;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 public class Story {
@@ -11,9 +12,9 @@ public class Story {
     private Timestamp deadline;
     private Category category;
     private int newsCount;
-    private int score;
+    private BigDecimal score;
     private int sourcesCount;
-    private int sourcesString;
+    private String sourcesString;
     private Timestamp pubDateFromMostRecentNews;
     private RecentNews mostRecentNews;
 
@@ -48,7 +49,7 @@ public class Story {
         return newsCount;
     }
 
-    public int getScore() {
+    public BigDecimal getScore() {
         return score;
     }
 
@@ -56,7 +57,7 @@ public class Story {
         return sourcesCount;
     }
 
-    public int getSourcesString() {
+    public String getSourcesString() {
         return sourcesString;
     }
 
@@ -103,7 +104,7 @@ public class Story {
         return this;
     }
 
-    public Story addScore(int score) {
+    public Story addScore(BigDecimal score) {
         this.score = score;
         return this;
     }
@@ -113,7 +114,7 @@ public class Story {
         return this;
     }
 
-    public Story addSourcesString(int sourcesString) {
+    public Story addSourcesString(String sourcesString) {
         this.sourcesString = sourcesString;
         return this;
     }
@@ -143,48 +144,54 @@ public class Story {
             return id;
         }
 
-        public void setId(int id) {
+        public RecentNews addId(int id) {
             this.id = id;
+            return this;
         }
 
         public String getTitle() {
             return title;
         }
 
-        public void setTitle(String title) {
+        public RecentNews addTitle(String title) {
             this.title = title;
+            return this;
         }
 
         public String getSnippet() {
             return snippet;
         }
 
-        public void setSnippet(String snippet) {
+        public RecentNews addSnippet(String snippet) {
             this.snippet = snippet;
+            return this;
         }
 
         public String getImgUrl() {
             return imgUrl;
         }
 
-        public void setImgUrl(String imgUrl) {
+        public RecentNews addImgUrl(String imgUrl) {
             this.imgUrl = imgUrl;
+            return this;
         }
 
         public Timestamp getPublicationDate() {
             return publicationDate;
         }
 
-        public void setPublicationDate(Timestamp publicationDate) {
+        public RecentNews addPublicationDate(Timestamp publicationDate) {
             this.publicationDate = publicationDate;
+            return this;
         }
 
         public Source getSource() {
             return source;
         }
 
-        public void setSource(Source source) {
+        public RecentNews addSource(Source source) {
             this.source = source;
+            return this;
         }
     }
 

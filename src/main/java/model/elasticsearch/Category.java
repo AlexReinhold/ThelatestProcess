@@ -14,32 +14,36 @@ public class Category {
         return id;
     }
 
-    public void setId(int id) {
+    public Category addId(int id) {
         this.id = id;
+        return this;
     }
 
     public String getSlug() {
         return slug;
     }
 
-    public void setSlug(String slug) {
+    public Category addSlug(String slug) {
         this.slug = slug;
+        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public Category addName(String name) {
         this.name = name;
+        return this;
     }
 
     public String getParent() {
         return parent;
     }
 
-    public void setParent(String parent) {
+    public Category addParent(String parent) {
         this.parent = parent;
+        return this;
     }
 
 }
