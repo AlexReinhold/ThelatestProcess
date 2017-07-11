@@ -1,6 +1,6 @@
 package mapper.tl;
 
-import models.tl.Category;
+import model.tl.Category;
 import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;

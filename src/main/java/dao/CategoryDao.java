@@ -1,7 +1,7 @@
 package dao;
 
 import mapper.tl.CategoryRowMapper;
-import models.tl.Category;
+import model.tl.Category;
 import org.springframework.jdbc.core.JdbcTemplate;
 import resource.SQL;
 import javax.sql.DataSource;

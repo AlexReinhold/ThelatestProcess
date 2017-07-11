@@ -13,10 +13,10 @@ public class ttrssDataSource {
     public ttrssDataSource() throws IOException, SQLException, PropertyVetoException {
         dataSource = new BasicDataSource();
         dataSource.setDriverClassName("org.postgresql.Driver");
-//        dataSource.setUsername("postgres"); // dev
-//        dataSource.setPassword("123456"); // dev
-        dataSource.setUsername("dev_thelatest"); // prod
-        dataSource.setPassword("!dev_thelatest!2014"); // prod
+        dataSource.setUsername("postgres"); // dev
+        dataSource.setPassword("123456"); // dev
+//        dataSource.setUsername("dev_thelatest"); // prod
+//        dataSource.setPassword("!dev_thelatest!2014"); // prod
         dataSource.setUrl("jdbc:postgresql://localhost:5432/tt_rss"); // dev
     }
 

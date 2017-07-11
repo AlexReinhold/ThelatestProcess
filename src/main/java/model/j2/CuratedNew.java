@@ -1,10 +1,8 @@
-package models.j2;
+package model.j2;
 
-import models.ttrss.Source;
+import model.ttrss.Source;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
 public class CuratedNew {
     private int id;

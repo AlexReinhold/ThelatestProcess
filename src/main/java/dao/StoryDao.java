@@ -4,8 +4,8 @@ import javax.sql.DataSource;
 
 import mapper.j2.ClusterRowMapper;
 import mapper.tl.StoryRowMapper;
-import models.j2.Cluster;
-import models.tl.Story;
+import model.j2.Cluster;
+import model.tl.Story;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;

@@ -1,4 +1,4 @@
-package models.tl;
+package model.tl;
 
 public class UnprocessedNews {
     private int id;

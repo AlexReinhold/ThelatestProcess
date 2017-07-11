@@ -1,4 +1,4 @@
-package models.ttrss;
+package model.ttrss;
 
 import java.util.ArrayList;
 import java.util.List;

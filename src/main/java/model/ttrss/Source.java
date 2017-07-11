@@ -1,4 +1,4 @@
-package models.ttrss;
+package model.ttrss;
 
 public class Source {
     private int id;

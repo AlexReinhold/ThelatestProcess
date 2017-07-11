@@ -1,8 +1,8 @@
 package dao;
 
 import mapper.j2.CuratedNewRowMapper;
-import models.j2.CuratedNew;
-import models.tl.News;
+import model.j2.CuratedNew;
+import model.tl.News;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
