@@ -2,8 +2,10 @@ package dao;
 
 import javax.sql.DataSource;
 
+import mapper.elasticsearch.StoryESRowMapper;
 import mapper.j2.ClusterRowMapper;
 import mapper.tl.StoryRowMapper;
+import model.elasticsearch.StoryES;
 import model.j2.Cluster;
 import model.tl.Story;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -31,16 +33,18 @@ public class StoryDao {
         KeyHolder holder = new GeneratedKeyHolder();
         thelatestTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(SQL.TL.INSERTS.NEW_STORY, Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, story.getViews());
-            ps.setInt(2, story.getShares());
-            ps.setInt(3, story.getCategory().getId());
-            ps.setInt(4, story.getPosition());
-            ps.setString(5, story.getName());
-            ps.setInt(6, story.getExternalId());
-            ps.setString(7, story.getSlug());
-            ps.setTimestamp(8, story.getDeadLine());
+            ps.setInt(1, story.getCategory().getId());
+            ps.setString(2, story.getName());
+            ps.setInt(3, story.getExternalId());
+            ps.setString(4, story.getSlug());
+            ps.setInt(5, story.getViews());
+            ps.setTimestamp(6, story.getDeadLine());
+            ps.setInt(7, story.getPosition());
+            ps.setInt(8, story.getShares());
             ps.setString(9, story.getTags());
+
             return ps;
+
         }, holder);
         story.addId((Integer) holder.getKeys().get("id"));
         return story;
@@ -52,6 +56,10 @@ public class StoryDao {
 
     public List<Cluster> getClusterListFromJ2() {
         return j2Template.query(SQL.J2.SELECTS.UNPROCESSED_STORIES, new ClusterRowMapper<Cluster>());
+    }
+
+    public List<StoryES> getStoriesForES(){
+        return thelatestTemplate.query(SQL.TL.SELECTS.STORY_BY_ID_FOR_ES, new StoryESRowMapper<StoryES>());
     }
 
 }

@@ -7,11 +7,15 @@ import datasource.J2DataSource;
 import datasource.TlDataSource;
 import datasource.ttrssDataSource;
 import elasticsearch.ElasticSearchService;
+import model.elasticsearch.StoryES;
 import model.j2.Cluster;
+import model.j2.CuratedNew;
+import model.tl.Story;
 import org.apache.log4j.Logger;
 import resource.Process;
 import service.*;
 import javax.sql.DataSource;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -39,11 +43,14 @@ class BeginProcess {
         processingNews = processDao.state(Process.NEWS.getId());
         if (!processingNews) {
 
-            processDao.changeState(Process.NEWS.getId(), true);
+//            processDao.changeState(Process.NEWS.getId(), true);
+
+            List<Cluster> clusterList = storyDao.getClusterListFromJ2();
+            System.out.println(clusterList.size());
 
             ExecutorService threadPool1 = Executors.newFixedThreadPool(threads);
             Runnable storyDataManager = new StoryDataManager(tlDs, j2Ds, ttrssDs,
-                    new ProcessCluster(storyDao.getClusterListFromJ2()));
+                    new ProcessCluster(clusterList));
 
             for (int i = 0; i < threads; i++) {
                 Thread t = new Thread(storyDataManager);
@@ -54,18 +61,21 @@ class BeginProcess {
             while (!threadPool1.isTerminated()) {
             }
 
-            ExecutorService threadPool2 = Executors.newFixedThreadPool(threads);
-            Runnable newsDataManager = new NewsDataManager(tlDs, j2Ds, ttrssDs,
-                    new ProcessCuratedNews(newsDao.getCuratedNewsListFromJ2()));
+            List<CuratedNew> curatedNews = newsDao.getCuratedNewsListFromJ2();
+            System.out.println(curatedNews.size());
 
-            for (int i = 0; i < threads; i++) {
-                Thread t = new Thread(newsDataManager);
-                threadPool2.execute(t);
-            }
-
-            threadPool2.shutdown();
-            while (!threadPool2.isTerminated()) {
-            }
+//            ExecutorService threadPool2 = Executors.newFixedThreadPool(threads);
+//            Runnable newsDataManager = new NewsDataManager(tlDs, j2Ds, ttrssDs,
+//                    new ProcessCuratedNews(curatedNews));
+//
+//            for (int i = 0; i < threads; i++) {
+//                Thread t = new Thread(newsDataManager);
+//                threadPool2.execute(t);
+//            }
+//
+//            threadPool2.shutdown();
+//            while (!threadPool2.isTerminated()) {
+//            }
 
             processDao.changeState(Process.NEWS.getId(), false);
 

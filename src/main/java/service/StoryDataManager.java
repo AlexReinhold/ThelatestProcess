@@ -43,18 +43,19 @@ public class StoryDataManager implements Runnable {
 
     private Optional<Story> syncStories(Cluster cluster) {
         Story story = new Story();
-        story.addViews(0)
-                .addShares(0);
 
-        Category categoria = categoryDao.getByExternalId(cluster.getSubCatId()+"");
-        story.addCategory(categoria);
+
+        Category category = categoryDao.getByExternalId(cluster.getSubCatId()+"");
+        story.addCategory(category);
 
         story.addPosition(0)
             .addName(cluster.getTittle())
             .addExternalId(cluster.getId())
             .addSlug(cluster.getSlug())
             .addDeadLine(null)
-            .addTags("");
+            .addTags("")
+            .addViews(0)
+            .addShares(0);
 
         try {
             storyDao.insertStory(story);

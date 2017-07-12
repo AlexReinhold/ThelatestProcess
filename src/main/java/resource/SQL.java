@@ -38,8 +38,8 @@ public class SQL {
                     "       parent_id, " +
                     "       name, " +
                     "       active, " +
-                    "       menu_order " +
-                    "       external_id " +
+                    "       menu_order, " +
+                    "       external_id, " +
                     "       slug " +
                     "FROM tl_category " +
                     "WHERE external_id = ? ";
@@ -62,19 +62,25 @@ public class SQL {
                     "       s.slug, " +
                     "       s.position, " +
                     "       s.deadline, " +
+                    "       s.views, " +
                     "       c.id as category_id, " +
                     "       c.slug as category_slug, " +
                     "       c.name as category_name, " +
                     "       pc.slug as category_parent, " +
-                    "       (select count(*) from tl_news where story_id = s.id group by id) newsCount, " +
-                    "       (select count(*) from tl_news where story_id = s.id group by id) newsCount, " +
-                    "       (select count(*) from tl_news where story_id = s.id group by id) newsCount, " +
-                    "FROM tl_story s" +
+                    "       news.id as news_id, " +
+                    "       news.title as news_title, " +
+                    "       news.imgurl as news_imgurl, " +
+                    "       news.publication_date as news_pundate, " +
+                    "       source.id as source_id, " +
+                    "       source.name as source_name, " +
+                    "       (select count(*) from tl_news where story_id = s.id) as newsCount, " +
+                    "       (select count(*) from tl_story_wtm where story_id = s.id) as wtms, " +
+                    "       (select count(distinct(src.id)) from tl_source src inner join tl_news n on n.source_id = src.id where n.story_id=s.id ) as sourcesCount " +
+                    "FROM tl_story s " +
                     "INNER JOIN tl_category c on c.id = s.category_id " +
                     "LEFT JOIN tl_category pc on pc.id = c.parent_id " +
-                    "WHERE id = ? ";
-
-
+                    "INNER JOIN tl_news news on news.id = ( SELECT id FROM tl_news WHERE story_id = s.id order by publication_date limit 1 ) " +
+                    "INNER JOIN tl_source source on source.id = news.source_id ";
 
         }
 
@@ -82,7 +88,8 @@ public class SQL {
 
             public static final String NEW_STORY = "" +
                     "INSERT INTO tl_story " +
-                    "        (category_id, " +
+                    "        (id, " +
+                    "        category_id, " +
                     "        name, " +
                     "        external_id, " +
                     "        slug, " +
@@ -91,7 +98,7 @@ public class SQL {
                     "        position, " +
                     "        share, " +
                     "        tags) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    "VALUES (nextval('tl_story_id_seq'), ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             public static final String INSERT_NEWS = "" +
                     "INSERT INTO tl_news " +
@@ -116,8 +123,8 @@ public class SQL {
         public static final class UPDATES {
 
             public static final String CHANGE_PROCESS_STATE = "" +
-                    "UPDATE procesos " +
-                    "SET estado = ? " +
+                    "UPDATE tl_process " +
+                    "SET state = ? " +
                     "WHERE id = ?";
 
         }

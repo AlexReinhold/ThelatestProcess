@@ -8,13 +8,14 @@ import java.sql.SQLException;
 public class CategoryRowMapper<T> implements RowMapper<Category> {
 
     public Category mapRow(ResultSet rs, int rowNum) throws SQLException{
-        Category category = new Category();
-        category.addId(rs.getInt("id"));
-        category.addNombre(rs.getString("nombre"));
-        category.addCategoriaPadre(rs.getInt("categoria_padre"));
-        category.addIdExterno(rs.getInt("id_externo"));
-        category.addSlug(rs.getString("slug"));
-        return category;
+        return new Category()
+            .addId(rs.getInt("id"))
+            .addNombre(rs.getString("name"))
+            .addCategoriaPadre(rs.getInt("parent_id"))
+            .addIdExterno(rs.getInt("external_id"))
+            .addSlug(rs.getString("slug"))
+            .addActive(rs.getBoolean("active"))
+            .addMenuOrder(rs.getInt("menu_order"));
     }
 
 }

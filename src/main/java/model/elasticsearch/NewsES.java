@@ -2,7 +2,7 @@ package model.elasticsearch;
 
 import java.sql.Timestamp;
 
-public class News {
+public class NewsES {
 
     private int id;
     private String title;
@@ -12,14 +12,14 @@ public class News {
     protected Source source;
     protected Story story;
 
-    public News() {
+    public NewsES() {
     }
 
     public int getId() {
         return id;
     }
 
-    public News setId(int id) {
+    public NewsES addId(int id) {
         this.id = id;
         return this;
     }
@@ -28,51 +28,57 @@ public class News {
         return title;
     }
 
-    public void setTitle(String title) {
+    public NewsES addTitle(String title) {
         this.title = title;
+        return this;
     }
 
     public Timestamp getPublicationDate() {
         return publicationDate;
     }
 
-    public void setPublicationDate(Timestamp publicationDate) {
+    public NewsES addPublicationDate(Timestamp publicationDate) {
         this.publicationDate = publicationDate;
+        return this;
     }
 
     public String getSnippet() {
         return snippet;
     }
 
-    public void setSnippet(String snippet) {
+    public NewsES addSnippet(String snippet) {
         this.snippet = snippet;
+        return this;
     }
 
     public String getImgUrl() {
         return imgUrl;
     }
 
-    public void setImgUrl(String imgUrl) {
+    public NewsES addImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
+        return this;
     }
 
     public Source getSource() {
         return source;
     }
 
-    public void setSource(Source source) {
+    public NewsES addSource(Source source) {
         this.source = source;
+        return this;
     }
 
     public Story getStory() {
         return story;
     }
 
-    public void setStory(Story story) {
+    public NewsES addStory(Story story) {
         this.story = story;
+        return this;
     }
 
-    class Story {
+    public class Story {
 
         private int id;
         private String slug;
@@ -86,32 +92,36 @@ public class News {
             return id;
         }
 
-        public void setId(int id) {
+        public Story addId(int id) {
             this.id = id;
+            return this;
         }
 
         public String getSlug() {
             return slug;
         }
 
-        public void setSlug(String slug) {
+        public Story addSlug(String slug) {
             this.slug = slug;
+            return this;
         }
 
         public String getName() {
             return name;
         }
 
-        public void setName(String name) {
+        public Story addName(String name) {
             this.name = name;
+            return this;
         }
 
         public Category getCategory() {
             return category;
         }
 
-        public void setCategory(Category category) {
+        public Story addCategory(Category category) {
             this.category = category;
+            return this;
         }
 
     }

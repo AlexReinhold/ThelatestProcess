@@ -2,8 +2,8 @@ package elasticsearch;
 
 import com.google.gson.Gson;
 import dao.StoryDao;
-import model.elasticsearch.News;
-import model.elasticsearch.Story;
+import model.elasticsearch.NewsES;
+import model.elasticsearch.StoryES;
 import model.elasticsearch.WTM;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Client;
@@ -32,9 +32,9 @@ public class ElasticSearchService {
         client.close();
     }
 
-    public void insertStories(List<Story> stories){
+    public void insertStories(List<StoryES> stories){
 
-        for (Story s : stories) {
+        for (StoryES s : stories) {
             IndexResponse response = client.prepareIndex(INDEX, STORY_TYPE, s.getId() + "")
                     .setSource(new Gson().toJson(s))
                     .execute()
@@ -45,9 +45,9 @@ public class ElasticSearchService {
 
     }
 
-    public void insertNews(List<News> news){
+    public void insertNews(List<NewsES> news){
 
-        for (News s : news) {
+        for (NewsES s : news) {
             IndexResponse response = client.prepareIndex(INDEX, NEWS_TYPE, s.getId() + "")
                     .setSource(new Gson().toJson(s))
                     .execute()

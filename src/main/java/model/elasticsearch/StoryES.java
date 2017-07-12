@@ -1,9 +1,10 @@
 package model.elasticsearch;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 
-public class Story {
+public class StoryES {
 
     private int id;
     private String name;
@@ -18,7 +19,7 @@ public class Story {
     private Timestamp pubDateFromMostRecentNews;
     private RecentNews mostRecentNews;
 
-    public Story() {
+    public StoryES() {
     }
 
     public int getId() {
@@ -69,62 +70,67 @@ public class Story {
         return mostRecentNews;
     }
 
-    public Story addId(int id) {
+    public StoryES addId(int id) {
         this.id = id;
         return this;
     }
 
-    public Story addName(String name) {
+    public StoryES addName(String name) {
         this.name = name;
         return this;
     }
 
-    public Story addSlug(String slug) {
+    public StoryES addSlug(String slug) {
         this.slug = slug;
         return this;
     }
 
-    public Story addPosition(int position) {
+    public StoryES addPosition(int position) {
         this.position = position;
         return this;
     }
 
-    public Story addDeadline(Timestamp deadline) {
+    public StoryES addDeadline(Timestamp deadline) {
         this.deadline = deadline;
         return this;
     }
 
-    public Story addCategory(Category category) {
+    public StoryES addCategory(Category category) {
         this.category = category;
         return this;
     }
 
-    public Story addNewsCount(int newsCount) {
+    public StoryES addNewsCount(int newsCount) {
         this.newsCount = newsCount;
         return this;
     }
 
-    public Story addScore(BigDecimal score) {
-        this.score = score;
+    public StoryES addScore(int views, int wtms) {
+
+        int sources = getSourcesCount();
+        int news = getNewsCount();
+
+        this.score = calculate(views, sources, wtms, news);
+
         return this;
     }
 
-    public Story addSourcesCount(int sourcesCount) {
+    public StoryES addSourcesCount(int sourcesCount) {
         this.sourcesCount = sourcesCount;
         return this;
     }
 
-    public Story addSourcesString(String sourcesString) {
+    public StoryES addSourcesString(String sourcesString) {
         this.sourcesString = sourcesString;
         return this;
     }
 
-    public Story addPubDateFromMostRecentNews(Timestamp pubDateFromMostRecentNews) {
+    public StoryES addPubDateFromMostRecentNews(Timestamp pubDateFromMostRecentNews) {
         this.pubDateFromMostRecentNews = pubDateFromMostRecentNews;
         return this;
     }
 
-    public Story addMostRecentNews(RecentNews mostRecentNews) {
+    public StoryES addMostRecentNews(RecentNews mostRecentNews) {
         this.mostRecentNews = mostRecentNews;
         return this;
     }
@@ -192,6 +198,19 @@ public class Story {
         public RecentNews addSource(Source source) {
             this.source = source;
             return this;
+        }
+    }
+
+    private static BigDecimal calculate(int views, int sources, int wtms, int news){
+
+        if(news == 0)
+            return BigDecimal.ZERO;
+        else {
+            double r1 = 0.6*sources;
+            double r2 = 0.2*((double) sources/ (double) news);
+            double r3 = 0.1*views;
+            double r4 = 0.3*wtms;
+            return new BigDecimal(r1 + r2 + r3 + r4).setScale(2, RoundingMode.HALF_UP);
         }
     }
 

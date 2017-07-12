@@ -2,10 +2,12 @@ package model.tl;
 
 public class Category {
     private int id;
-    private String nombre;
-    private int categoriaPadre;
-    private int idExterno;
+    private String name;
+    private int parentId;
+    private int externalId;
     private String slug;
+    private boolean active;
+    private int menuOrder;
 
     public Category() {
     }
@@ -19,30 +21,30 @@ public class Category {
         return this;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getName() {
+        return name;
     }
 
-    public Category addNombre(String nombre) {
-        this.nombre = nombre;
+    public Category addNombre(String name) {
+        this.name = name;
         return this;
     }
 
-    public int getCategoriaPadre() {
-        return categoriaPadre;
+    public int getParentId() {
+        return parentId;
     }
 
-    public Category addCategoriaPadre(int categoriaPadre) {
-        this.categoriaPadre = categoriaPadre;
+    public Category addCategoriaPadre(int àrentId) {
+        this.parentId = àrentId;
         return this;
     }
 
-    public int getIdExterno() {
-        return idExterno;
+    public int getExternalId() {
+        return externalId;
     }
 
-    public Category addIdExterno(int idExterno) {
-        this.idExterno = idExterno;
+    public Category addIdExterno(int externaId) {
+        this.externalId = externaId;
         return this;
     }
 
@@ -55,4 +57,21 @@ public class Category {
         return this;
     }
 
+    public boolean isActive() {
+        return active;
+    }
+
+    public Category addActive(boolean active) {
+        this.active = active;
+        return this;
+    }
+
+    public int getMenuOrder() {
+        return menuOrder;
+    }
+
+    public Category addMenuOrder(int menuOrder) {
+        this.menuOrder = menuOrder;
+        return this;
+    }
 }

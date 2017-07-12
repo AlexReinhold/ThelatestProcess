@@ -13,18 +13,18 @@ import java.util.List;
 
 public class NewsDao {
 
-    private JdbcTemplate tnTemplate, a3Template, ttrssTemplate;
+    private JdbcTemplate tlTemplate, j2Template, ttrssTemplate;
 
     public NewsDao(DataSource tnDs, DataSource a3Ds, DataSource ttrssDs) {
-        this.tnTemplate = new JdbcTemplate(tnDs);
-        this.a3Template = new JdbcTemplate(a3Ds);
+        this.tlTemplate = new JdbcTemplate(tnDs);
+        this.j2Template = new JdbcTemplate(a3Ds);
         this.ttrssTemplate = new JdbcTemplate(ttrssDs);
 
     }
 
     public News insertNews(News news) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        tnTemplate.update(connection -> {
+        tlTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(SQL.TL.INSERTS.INSERT_NEWS, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, news.getStory().getId());
             ps.setInt(2, news.getSource().getId());
@@ -48,11 +48,11 @@ public class NewsDao {
     }
 
     public List<CuratedNew> getCuratedNewsListFromJ2() {
-        return a3Template.query(SQL.J2.SELECTS.UNPROCESSED_NEWS, new CuratedNewRowMapper<CuratedNew>());
+        return j2Template.query(SQL.J2.SELECTS.UNPROCESSED_NEWS, new CuratedNewRowMapper<CuratedNew>());
     }
 
     public int updateNewsStateJ2(int id, boolean estado) {
-        return a3Template.update(SQL.J2.UPDATES.CHANGE_NEWS_STATE, estado, id);
+        return j2Template.update(SQL.J2.UPDATES.CHANGE_NEWS_STATE, estado, id);
     }
 
 }
