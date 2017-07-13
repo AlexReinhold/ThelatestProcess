@@ -11,21 +11,21 @@ public class StoryRowMapper<T> implements RowMapper<Story> {
     public Story mapRow(ResultSet rs, int rowNumb) throws SQLException {
 
         return new Story().addId(rs.getInt("id"))
-                .addViews(rs.getInt("vistas"))
-                .addShares(rs.getInt("compartidos"))
-                .addCategory(new Category().addId(rs.getInt("c_id"))
-                        .addNombre(rs.getString("c_nombre"))
-                        .addCategoriaPadre(rs.getInt("categoria_padre"))
-                        .addIdExterno(rs.getInt("n_id_externo")))
-                .addPosition(rs.getInt("posicion"))
-                .addName(rs.getString("titulo"))
-                .addExternalId(rs.getInt("n_id_externo"))
+                .addName(rs.getString("name"))
+                .addExternalId(rs.getInt("external_id"))
                 .addSlug(rs.getString("slug"))
+                .addViews(rs.getInt("views"))
                 .addDeadLine(rs.getTimestamp("deadline"))
+                .addPosition(rs.getInt("position"))
+                .addShares(rs.getInt("share"))
                 .addTags(rs.getString("tags"))
-                .addPubDate(rs.getTimestamp("fecha_publicacion"))
-                .addLastUpdate(rs.getTimestamp("ultima_actualizacion"))
-                .addSourcesNumber(rs.getInt("numero_fuentes"));
+                .addCategory(new Category().addId(rs.getInt("c_id"))
+                        .addParentId(rs.getInt("parent_id"))
+                        .addName(rs.getString("c_name"))
+                        .addActive(rs.getBoolean("c_active"))
+                        .addMenuOrder(rs.getInt("menu_order"))
+                        .addExternalId(rs.getInt("c_external_id"))
+                        .addSlug(rs.getString("c_slug")));
     }
 
 }

@@ -10,9 +10,9 @@ public class CategoryRowMapper<T> implements RowMapper<Category> {
     public Category mapRow(ResultSet rs, int rowNum) throws SQLException{
         return new Category()
             .addId(rs.getInt("id"))
-            .addNombre(rs.getString("name"))
-            .addCategoriaPadre(rs.getInt("parent_id"))
-            .addIdExterno(rs.getInt("external_id"))
+            .addName(rs.getString("name"))
+            .addParentId(rs.getInt("parent_id"))
+            .addExternalId(rs.getInt("external_id"))
             .addSlug(rs.getString("slug"))
             .addActive(rs.getBoolean("active"))
             .addMenuOrder(rs.getInt("menu_order"));

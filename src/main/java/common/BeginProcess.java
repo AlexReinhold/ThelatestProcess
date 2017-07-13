@@ -64,18 +64,18 @@ class BeginProcess {
             List<CuratedNew> curatedNews = newsDao.getCuratedNewsListFromJ2();
             System.out.println(curatedNews.size());
 
-//            ExecutorService threadPool2 = Executors.newFixedThreadPool(threads);
-//            Runnable newsDataManager = new NewsDataManager(tlDs, j2Ds, ttrssDs,
-//                    new ProcessCuratedNews(curatedNews));
-//
-//            for (int i = 0; i < threads; i++) {
-//                Thread t = new Thread(newsDataManager);
-//                threadPool2.execute(t);
-//            }
-//
-//            threadPool2.shutdown();
-//            while (!threadPool2.isTerminated()) {
-//            }
+            ExecutorService threadPool2 = Executors.newFixedThreadPool(threads);
+            Runnable newsDataManager = new NewsDataManager(tlDs, j2Ds, ttrssDs,
+                    new ProcessCuratedNews(curatedNews));
+
+            for (int i = 0; i < threads; i++) {
+                Thread t = new Thread(newsDataManager);
+                threadPool2.execute(t);
+            }
+
+            threadPool2.shutdown();
+            while (!threadPool2.isTerminated()) {
+            }
 
             processDao.changeState(Process.NEWS.getId(), false);
 

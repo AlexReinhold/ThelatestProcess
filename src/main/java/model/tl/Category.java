@@ -25,7 +25,7 @@ public class Category {
         return name;
     }
 
-    public Category addNombre(String name) {
+    public Category addName(String name) {
         this.name = name;
         return this;
     }
@@ -34,7 +34,7 @@ public class Category {
         return parentId;
     }
 
-    public Category addCategoriaPadre(int àrentId) {
+    public Category addParentId(int àrentId) {
         this.parentId = àrentId;
         return this;
     }
@@ -43,7 +43,7 @@ public class Category {
         return externalId;
     }
 
-    public Category addIdExterno(int externaId) {
+    public Category addExternalId(int externaId) {
         this.externalId = externaId;
         return this;
     }

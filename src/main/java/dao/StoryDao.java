@@ -26,7 +26,7 @@ public class StoryDao {
     }
 
     public Story storyBySlug(String slug) {
-        return thelatestTemplate.queryForObject(SQL.TL.SELECTS.NOTICIA_POR_SLUG, new Object[]{slug}, new StoryRowMapper<Story>());
+        return thelatestTemplate.queryForObject(SQL.TL.SELECTS.STORY_BY_SLUG, new Object[]{slug}, new StoryRowMapper<Story>());
     }
 
     public Story insertStory(final Story story) {

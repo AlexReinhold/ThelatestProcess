@@ -6,27 +6,27 @@ public class SQL {
 
         public static class SELECTS {
 
-            public static final String NOTICIA_POR_SLUG = "" +
-                    "SELECT n.id, " +
-                    "       n.vistas, " +
-                    "       n.compartidos, " +
-                    "       n.posicion, " +
-                    "       n.titulo, " +
-                    "       n.id_externo AS n_id_externo, " +
-                    "       n.slug, " +
-                    "       n.deadline, " +
-                    "       n.tags, " +
-                    "       n.fecha_publicacion, " +
-                    "       n.ultima_actualizacion, " +
-                    "       n.numero_fuentes, " +
+            public static final String STORY_BY_SLUG = "" +
+                    "SELECT s.id, " +
+                    "       s.category_id, " +
+                    "       s.name, " +
+                    "       s.external_id, " +
+                    "       s.slug, " +
+                    "       s.views, " +
+                    "       s.deadline, " +
+                    "       s.position, " +
+                    "       s.share, " +
+                    "       s.tags, " +
                     "       c.id AS c_id, " +
-                    "       c.nombre AS c_nombre, " +
-                    "       c.categoria_padre, " +
-                    "       c.id_externo AS c_id_externo, " +
+                    "       c.parent_id, " +
+                    "       c.name AS c_name, " +
+                    "       c.active AS c_active, "+
+                    "       c.menu_order, "+
+                    "       c.external_id AS c_external_id, " +
                     "       c.slug AS c_slug " +
-                    "FROM noticia n " +
-                    "     INNER JOIN categoria c ON c.id = n.categoria_id " +
-                    "WHERE n.slug = ? ";
+                    "FROM tl_story s " +
+                    "     INNER JOIN tl_category c ON c.id = s.category_id " +
+                    "WHERE s.slug = ? ";
 
             public static final String PROCESS_STATE = "" +
                     "SELECT state " +
@@ -49,9 +49,9 @@ public class SQL {
                     "       name, " +
                     "       section, " +
                     "       external_id, " +
-                    "       alias " +
-                    "       source_feed_url " +
-                    "       sourceurl " +
+                    "       alias, " +
+                    "       source_feed_url, " +
+                    "       sourceurl, " +
                     "       icon_url " +
                     "FROM tl_source " +
                     "WHERE external_id = ? ";
@@ -102,7 +102,8 @@ public class SQL {
 
             public static final String INSERT_NEWS = "" +
                     "INSERT INTO tl_news " +
-                    "       (story_id, " +
+                    "       (id," +
+                    "        story_id, " +
                     "        source_id, " +
                     "        url, " +
                     "        externalid, " +
@@ -116,7 +117,7 @@ public class SQL {
                     "        staff_picks, " +
                     "        content, " +
                     "        tags) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    "VALUES (nextval('tl_news_id_seq'),?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         }
 
@@ -156,7 +157,7 @@ public class SQL {
                     "       cn.source_id AS cn_source_id, " +
                     "       cn.clustered AS cn_clustered, " +
                     "       cn.synchronized AS cn_synchronized, " +
-                    "       cn.tags AS cn_tags, " +
+//                    "       cn.tags AS cn_tags, " +
                     "       nc.id AS nc_id, " +
                     "       nc.content AS nc_content, " +
                     "       nc.summary AS nc_summary, " +
