@@ -48,9 +48,9 @@ class BeginProcess {
             List<Cluster> clusterList = storyDao.getClusterListFromJ2();
             System.out.println(clusterList.size());
 
+            ProcessCluster processCluster = new ProcessCluster(clusterList);
             ExecutorService threadPool1 = Executors.newFixedThreadPool(threads);
-            Runnable storyDataManager = new StoryDataManager(tlDs, j2Ds, ttrssDs,
-                    new ProcessCluster(clusterList));
+            Runnable storyDataManager = new StoryDataManager(tlDs, j2Ds, ttrssDs, processCluster);
 
             for (int i = 0; i < threads; i++) {
                 Thread t = new Thread(storyDataManager);
@@ -64,9 +64,9 @@ class BeginProcess {
             List<CuratedNew> curatedNews = newsDao.getCuratedNewsListFromJ2();
             System.out.println(curatedNews.size());
 
+            ProcessCuratedNews processCuratedNews = new ProcessCuratedNews(curatedNews);
             ExecutorService threadPool2 = Executors.newFixedThreadPool(threads);
-            Runnable newsDataManager = new NewsDataManager(tlDs, j2Ds, ttrssDs,
-                    new ProcessCuratedNews(curatedNews));
+            Runnable newsDataManager = new NewsDataManager(tlDs, j2Ds, ttrssDs, processCuratedNews);
 
             for (int i = 0; i < threads; i++) {
                 Thread t = new Thread(newsDataManager);
@@ -75,6 +75,14 @@ class BeginProcess {
 
             threadPool2.shutdown();
             while (!threadPool2.isTerminated()) {
+            }
+
+            for ( int id : processCluster.getCompleted()){
+                System.out.println("storyId : "+id);
+            }
+
+            for ( int id : processCuratedNews.getCompleted()){
+                System.out.println("newsId : "+id);
             }
 
             processDao.changeState(Process.NEWS.getId(), false);

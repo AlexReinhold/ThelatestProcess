@@ -42,8 +42,8 @@ public class StoryDataManager implements Runnable {
     }
 
     private Optional<Story> syncStories(Cluster cluster) {
-        Story story = new Story();
 
+        Story story = new Story();
 
         Category category = categoryDao.getByExternalId(cluster.getSubCatId()+"");
         story.addCategory(category);

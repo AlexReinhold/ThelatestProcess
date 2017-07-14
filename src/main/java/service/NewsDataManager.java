@@ -12,6 +12,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 import javax.sql.DataSource;
+import java.util.Optional;
 
 public class NewsDataManager implements Runnable {
 
@@ -35,7 +36,9 @@ public class NewsDataManager implements Runnable {
         int j = 0;
         while (processCuratedNews.isFinish()) {
             CuratedNew curatedNew = processCuratedNews.obtenerCuratedNew();
-            if (syncNews(curatedNew) == 1) {
+            Optional<News> news = syncNews(curatedNew);
+            if (news.isPresent()) {
+                processCuratedNews.addCompleted(news.get().getId());
                 j++;
             }
         }
@@ -45,7 +48,7 @@ public class NewsDataManager implements Runnable {
         logger.info("-----------------------------------------------------");
     }
 
-    private int syncNews(CuratedNew curatedNew) {
+    private Optional<News> syncNews(CuratedNew curatedNew) {
 
         Source source = fuenteDao.sourceByExternalId(curatedNew.getSource().getId()+"");
 
@@ -54,7 +57,7 @@ public class NewsDataManager implements Runnable {
             story = storyDao.storyBySlug(curatedNew.getCluster().getSlug());
         } catch (EmptyResultDataAccessException e) {
             logger.error("story not found by slug -> " + curatedNew.getCluster().getSlug());
-            return 0;
+            return Optional.empty();
         }
 
         News news = new News();
@@ -71,13 +74,13 @@ public class NewsDataManager implements Runnable {
                 .addAddedDate(curatedNew.getDateEntered())
                 .addStaffPicks(false)
                 .addContent(curatedNew.getNewsContent().getRawText())
-                .addTags("")
-        ;
+                .addTags("");
+
         try {
-            news = newsDao.insertNews(news);
+            newsDao.insertNews(news);
             if (news.getId() > 0) {
                 newsDao.updateNewsStateJ2(curatedNew.getId(), true);
-                return 1;
+                return Optional.of(news);
             } else {
                 logger.error("articulo no registrado en TN " + news.getTitle());
             }
@@ -88,7 +91,7 @@ public class NewsDataManager implements Runnable {
             logger.error(e.getCause());
         }
 
-        return 0;
+        return Optional.empty();
     }
 
 }
