@@ -70,7 +70,8 @@ public class SQL {
                     "       news.id as news_id, " +
                     "       news.title as news_title, " +
                     "       news.imgurl as news_imgurl, " +
-                    "       news.publication_date as news_pundate, " +
+                    "       news.publication_date as news_pubdate, " +
+                    "       news.snippet as news_snippet, " +
                     "       source.id as source_id, " +
                     "       source.name as source_name, " +
                     "       (select count(*) from tl_news where story_id = s.id) as newsCount, " +
@@ -80,7 +81,59 @@ public class SQL {
                     "INNER JOIN tl_category c on c.id = s.category_id " +
                     "LEFT JOIN tl_category pc on pc.id = c.parent_id " +
                     "INNER JOIN tl_news news on news.id = ( SELECT id FROM tl_news WHERE story_id = s.id order by publication_date limit 1 ) " +
-                    "INNER JOIN tl_source source on source.id = news.source_id ";
+                    "INNER JOIN tl_source source on source.id = news.source_id " +
+                    "WHERE s.id in (:ids)";
+
+            public static final String STORY_BY_NEWS_ID_FOR_ES = "" +
+                    "SELECT s.id, " +
+                    "       s.name, " +
+                    "       s.slug, " +
+                    "       s.position, " +
+                    "       s.deadline, " +
+                    "       s.views, " +
+                    "       c.id as category_id, " +
+                    "       c.slug as category_slug, " +
+                    "       c.name as category_name, " +
+                    "       pc.slug as category_parent, " +
+                    "       news.id as news_id, " +
+                    "       news.title as news_title, " +
+                    "       news.imgurl as news_imgurl, " +
+                    "       news.publication_date as news_pubdate, " +
+                    "       news.snippet as news_snippet, " +
+                    "       source.id as source_id, " +
+                    "       source.name as source_name, " +
+                    "       (select count(*) from tl_news where story_id = s.id) as newsCount, " +
+                    "       (select count(*) from tl_story_wtm where story_id = s.id) as wtms, " +
+                    "       (select count(distinct(src.id)) from tl_source src inner join tl_news n on n.source_id = src.id where n.story_id=s.id ) as sourcesCount " +
+                    "FROM tl_story s " +
+                    "INNER JOIN tl_category c on c.id = s.category_id " +
+                    "LEFT JOIN tl_category pc on pc.id = c.parent_id " +
+                    "INNER JOIN tl_news news on news.id = ( SELECT id FROM tl_news WHERE story_id = s.id order by publication_date limit 1 ) " +
+                    "INNER JOIN tl_source source on source.id = news.source_id " +
+                    "WHERE news.id in (:ids)";
+
+            public static final String NEWS_BY_ID_FOR_ES = "" +
+                    "SELECT n.id, " +
+                    "       n.title, " +
+                    "       n.publication_date, " +
+                    "       n.snippet, " +
+                    "       n.imgurl, " +
+                    "       n.url, " +
+                    "       src.id as source_id, " +
+                    "       src.name as source_name, " +
+                    "       s.id as story_id, " +
+                    "       s.name as story_name, " +
+                    "       s.slug as story_slug, " +
+                    "       c.id as category_id, " +
+                    "       c.slug as category_slug, " +
+                    "       c.name as category_name, " +
+                    "       pc.slug as category_parent " +
+                    "FROM tl_news n " +
+                    "INNER JOIN tl_source src on src.id=n.source_id " +
+                    "INNER JOIN tl_story s on s.id=n.story_id " +
+                    "INNER JOIN tl_category c on c.id=s.category_id " +
+                    "LEFT JOIN tl_category pc on pc.id=c.parent_id " +
+                    "WHERE n.id in (:ids)";
 
         }
 
@@ -162,11 +215,13 @@ public class SQL {
                     "       nc.content AS nc_content, " +
                     "       nc.summary AS nc_summary, " +
                     "       nc.keywords AS nc_keywords, " +
-                    "       nc.raw_text AS nc_raw_text " +
+                    "       nc.raw_text AS nc_raw_text, " +
+                    "       ni.content AS imgurl " +
                     "FROM fl_cluster_details cd " +
                     "     INNER JOIN fl_clusters c ON c.id = cd.cluster_id " +
                     "     INNER JOIN fl_curated_news cn ON cn.id = cd.news_id " +
                     "     INNER JOIN fl_news_content nc ON nc.id = cn.id " +
+                    "     INNER JOIN fl_news_img ni ON ni.id = cn.id " +
                     "WHERE cn.clustered = TRUE " +
                     "AND cn.synchronized = FALSE " +
                     "ORDER BY cn.id ASC";

@@ -1,6 +1,7 @@
 package elasticsearch;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import dao.StoryDao;
 import model.elasticsearch.NewsES;
 import model.elasticsearch.StoryES;
@@ -35,24 +36,35 @@ public class ElasticSearchService {
     public void insertStories(List<StoryES> stories){
 
         for (StoryES s : stories) {
+            String json = new GsonBuilder()
+                    .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
+                    .serializeNulls()
+                    .create()
+                    .toJson(s);
+            System.out.println("Story -> "+json);
             IndexResponse response = client.prepareIndex(INDEX, STORY_TYPE, s.getId() + "")
-                    .setSource(new Gson().toJson(s))
+                    .setSource(json)
                     .execute()
                     .actionGet();
-            System.out.println(response);
-
+            System.out.println("storyId: "+s.getId()+" / -> "+response.isCreated());
         }
 
     }
 
     public void insertNews(List<NewsES> news){
 
-        for (NewsES s : news) {
-            IndexResponse response = client.prepareIndex(INDEX, NEWS_TYPE, s.getId() + "")
-                    .setSource(new Gson().toJson(s))
+        for (NewsES n : news) {
+            String json = new GsonBuilder()
+                    .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
+                    .serializeNulls()
+                    .create()
+                    .toJson(n);
+            System.out.println("News -> "+json);
+            IndexResponse response = client.prepareIndex(INDEX, NEWS_TYPE, n.getId() + "")
+                    .setSource(json)
                     .execute()
                     .actionGet();
-            System.out.println(response);
+            System.out.println("newsId: "+n.getId()+" / -> "+response.isCreated());
 
         }
 

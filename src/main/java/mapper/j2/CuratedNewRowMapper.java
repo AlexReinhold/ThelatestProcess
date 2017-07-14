@@ -12,40 +12,36 @@ import java.sql.SQLException;
 public class CuratedNewRowMapper<T> implements RowMapper<CuratedNew> {
 
     public CuratedNew mapRow(ResultSet rs, int rowNum)  throws SQLException {
-        CuratedNew cn = new CuratedNew();
-        cn.addId(rs.getInt("cn_id"));
-        cn.addTitle(rs.getString("cn_title"));
-        cn.addLink(rs.getString("cn_link"));
-        cn.addPubDate(rs.getTimestamp("cn_pub_date"));
-        cn.addSnippet(rs.getString("cn_snippet"));
-        cn.addDateEntered(rs.getTimestamp("cn_date_entered"));
-        cn.addAuthor(rs.getString("cn_author"));
-        cn.addCategoryId(rs.getInt("cn_category_id"));
-        cn.addSubCategoryId(rs.getInt("cn_sub_cat_id"));
-            Source source = new Source();
-            source.addId(rs.getInt("cn_source_id"));
-        cn.addSource(source);
-        cn.addClustered(rs.getBoolean("cn_clustered"));
-        cn.addSynchronizeD(rs.getBoolean("cn_synchronized"));
-            NewsContent nc = new NewsContent();
-            nc.addId(rs.getInt("nc_id"));
-            nc.addContent(rs.getString("nc_content"));
-            nc.addSummary(rs.getString("nc_summary"));
-            nc.addKeywords(rs.getString("nc_keywords"));
-            nc.addRawText(rs.getString("nc_raw_text"));
-        cn.addNewsContent(nc);
-//        cn.addTags(rs.getString("cn_tags"));
-            Cluster c = new Cluster();
-            c.addId(rs.getInt("c_id"));
-            c.addSize(rs.getInt("c_size"));
-            c.addSlug(rs.getString("c_slug"));
-            c.addTittle(rs.getString("c_title"));
-            c.addMainCatId(rs.getInt("c_main_Cat_id"));
-            c.addSubCatId(rs.getInt("c_sub_cat_id"));
-            c.addSynchronizeD(rs.getBoolean("c_synchronized"));
-            c.addSound(rs.getBoolean("c_sound"));
-        cn.addCluster(c);
-        return cn;
+        return new CuratedNew()
+        .addId(rs.getInt("cn_id"))
+        .addTitle(rs.getString("cn_title"))
+        .addLink(rs.getString("cn_link"))
+        .addPubDate(rs.getTimestamp("cn_pub_date"))
+        .addSnippet(rs.getString("cn_snippet"))
+        .addDateEntered(rs.getTimestamp("cn_date_entered"))
+        .addAuthor(rs.getString("cn_author"))
+        .addCategoryId(rs.getInt("cn_category_id"))
+        .addImage(rs.getString("imgurl"))
+        .addSubCategoryId(rs.getInt("cn_sub_cat_id"))
+        .addSource(new Source().addId(rs.getInt("cn_source_id")))
+        .addClustered(rs.getBoolean("cn_clustered"))
+        .addSynchronizeD(rs.getBoolean("cn_synchronized"))
+        .addNewsContent(new NewsContent()
+            .addId(rs.getInt("nc_id"))
+            .addContent(rs.getString("nc_content"))
+            .addSummary(rs.getString("nc_summary"))
+            .addKeywords(rs.getString("nc_keywords"))
+            .addRawText(rs.getString("nc_raw_text")))
+//        .addTags(rs.getString("cn_tags"))
+        .addCluster(new Cluster()
+            .addId(rs.getInt("c_id"))
+            .addSize(rs.getInt("c_size"))
+            .addSlug(rs.getString("c_slug"))
+            .addTittle(rs.getString("c_title"))
+            .addMainCatId(rs.getInt("c_main_Cat_id"))
+            .addSubCatId(rs.getInt("c_sub_cat_id"))
+            .addSynchronizeD(rs.getBoolean("c_synchronized"))
+            .addSound(rs.getBoolean("c_sound")));
     }
 
 }

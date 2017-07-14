@@ -9,6 +9,7 @@ public class NewsES {
     private Timestamp publicationDate;
     private String snippet;
     private String imgUrl;
+    private String url;
     protected Source source;
     protected Story story;
 
@@ -57,6 +58,15 @@ public class NewsES {
 
     public NewsES addImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
+        return this;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public NewsES addUrl(String url) {
+        this.url = url;
         return this;
     }
 

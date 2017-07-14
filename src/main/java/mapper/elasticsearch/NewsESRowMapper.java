@@ -13,10 +13,11 @@ public class NewsESRowMapper<T> implements RowMapper<NewsES> {
     public NewsES mapRow(ResultSet rs, int rowNumb) throws SQLException {
         NewsES news = new NewsES();
         news.addId(rs.getInt("id"))
-            .addTitle(rs.getString("titulo"))
-            .addPublicationDate(rs.getTimestamp("fecha_publicacion"))
-            .addSnippet(rs.getString("contenido"))
-            .addImgUrl(rs.getString("tags"))
+            .addTitle(rs.getString("title"))
+            .addPublicationDate(rs.getTimestamp("publication_date"))
+            .addSnippet(rs.getString("snippet"))
+            .addImgUrl(rs.getString("imgurl"))
+            .addUrl(rs.getString("url"))
             .addSource(new Source().addId(rs.getInt("source_id"))
                 .addName("sosurce_name"))
             .addStory(news.new Story().addId(rs.getInt("story_id"))

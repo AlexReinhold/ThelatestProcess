@@ -1,30 +1,38 @@
 package dao;
 
+import mapper.elasticsearch.NewsESRowMapper;
 import mapper.j2.CuratedNewRowMapper;
+import model.elasticsearch.NewsES;
 import model.j2.CuratedNew;
 import model.tl.News;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import resource.SQL;
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public class NewsDao {
 
-    private JdbcTemplate tlTemplate, j2Template, ttrssTemplate;
+    private JdbcTemplate thelatestTemplate, j2Template, ttrssTemplate;
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public NewsDao(DataSource tnDs, DataSource a3Ds, DataSource ttrssDs) {
-        this.tlTemplate = new JdbcTemplate(tnDs);
+        this.thelatestTemplate = new JdbcTemplate(tnDs);
         this.j2Template = new JdbcTemplate(a3Ds);
         this.ttrssTemplate = new JdbcTemplate(ttrssDs);
-
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(thelatestTemplate.getDataSource());
     }
 
     public News insertNews(News news) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        tlTemplate.update(connection -> {
+        thelatestTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(SQL.TL.INSERTS.INSERT_NEWS, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, news.getStory().getId());
             ps.setInt(2, news.getSource().getId());
@@ -53,6 +61,17 @@ public class NewsDao {
 
     public int updateNewsStateJ2(int id, boolean estado) {
         return j2Template.update(SQL.J2.UPDATES.CHANGE_NEWS_STATE, estado, id);
+    }
+
+    public Optional<List<NewsES>> getNewsForES(List<Integer> listId){
+        Map idsMap = Collections.singletonMap("ids", listId);
+        try{
+            List<NewsES> newsESList = namedParameterJdbcTemplate.query(SQL.TL.SELECTS.NEWS_BY_ID_FOR_ES, idsMap, new NewsESRowMapper<NewsES>());
+            return Optional.of(newsESList);
+        }catch (EmptyResultDataAccessException ex){
+            System.out.println("error news for elastic search empty");
+            return Optional.empty();
+        }
     }
 
 }

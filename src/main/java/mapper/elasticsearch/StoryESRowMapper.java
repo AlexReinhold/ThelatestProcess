@@ -25,12 +25,13 @@ public class StoryESRowMapper<T> implements RowMapper<StoryES> {
             .addNewsCount(rs.getInt("newscount"))                               //*
             .addSourcesCount(rs.getInt("sourcesCount"))                         //*
 //            .addSourcesString(rs.getString("sourcesString"))
-            .addPubDateFromMostRecentNews(rs.getTimestamp("news_pundate"))      //*
+            .addPubDateFromMostRecentNews(rs.getTimestamp("news_pubdate"))      //*
             .addScore(rs.getInt("views"), rs.getInt("wtms"))                    //*
             .addMostRecentNews(s.new RecentNews().addId(rs.getInt("news_id"))   //*
                 .addTitle(rs.getString("news_title"))                           //*
-                .addSnippet(rs.getString("news_imgurl"))                        //*
-                .addPublicationDate(rs.getTimestamp("news_pundate"))            //*
+                .addImgUrl(rs.getString("news_imgurl"))
+                .addSnippet(rs.getString("news_snippet"))                        //*
+                .addPublicationDate(rs.getTimestamp("news_pubdate"))            //*
                 .addSource(new Source().addId(rs.getInt("source_id"))           //*
                     .addName(rs.getString("source_name"))));                    //*
     }

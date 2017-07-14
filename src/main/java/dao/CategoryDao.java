@@ -2,9 +2,11 @@ package dao;
 
 import mapper.tl.CategoryRowMapper;
 import model.tl.Category;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import resource.SQL;
 import javax.sql.DataSource;
+import java.util.Optional;
 
 public class CategoryDao {
 
@@ -16,8 +18,15 @@ public class CategoryDao {
         this.ttrssTemplate = new JdbcTemplate(ttrssDs);
     }
 
-    public Category getByExternalId(String externalId){
-        return thelatestTemplate.queryForObject(SQL.TL.SELECTS.CATEGORY_BY_EXTERNAL_ID, new Object[]{externalId}, new CategoryRowMapper<Category>());
+    public Optional<Category> getByExternalId(String externalId){
+
+        try{
+            Category category = thelatestTemplate.queryForObject(SQL.TL.SELECTS.CATEGORY_BY_EXTERNAL_ID, new Object[]{externalId}, new CategoryRowMapper<Category>());
+            return Optional.of(category);
+        }catch (EmptyResultDataAccessException e){
+            System.out.println("not found category: "+externalId);
+            return Optional.empty();
+        }
     }
 
 }

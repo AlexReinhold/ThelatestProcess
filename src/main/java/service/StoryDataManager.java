@@ -25,19 +25,24 @@ public class StoryDataManager implements Runnable {
     public void run() {
         long inicio = System.currentTimeMillis();
         logger = Logger.getLogger(Thread.currentThread().getName());
+        System.out.println("Init thread"+Thread.currentThread().getName());
         int i = 0;
         while (processCluster.isFinish()) {
             Cluster cluster = processCluster.obtenerCluster();
+            System.out.println("cluster: "+cluster.getId());
             Optional<Story> story = syncStories(cluster);
-            if (story.isPresent()) {
-                processCluster.addCompleted(story.get().getId());
-                i++;
-            }
+
+            if(!story.isPresent())
+                continue;
+
+            processCluster.addCompleted(story.get().getId());
+            i++;
+
         }
-        logger.info(i + " Noticias Sincronizadas por el Thread " + Thread.currentThread().getName());
+        logger.info(i + " stories sync by the Thread " + Thread.currentThread().getName());
         logger.info("--------------------------------------------------");
         long fin = System.currentTimeMillis();
-        logger.info("Articulos y noticias Sincronizadas En " + (fin - inicio) + " ms");
+        logger.info("Stories sync in " + (fin - inicio) + " ms");
         logger.info("-----------------------------------------------------");
     }
 
@@ -45,8 +50,11 @@ public class StoryDataManager implements Runnable {
 
         Story story = new Story();
 
-        Category category = categoryDao.getByExternalId(cluster.getSubCatId()+"");
-        story.addCategory(category);
+        Optional<Category> category = categoryDao.getByExternalId(cluster.getSubCatId()+"");
+        if(!category.isPresent())
+            return Optional.empty();
+
+        story.addCategory(category.get());
 
         story.addPosition(0)
             .addName(cluster.getTittle())

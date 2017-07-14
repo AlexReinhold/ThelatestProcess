@@ -37,10 +37,13 @@ public class NewsDataManager implements Runnable {
         while (processCuratedNews.isFinish()) {
             CuratedNew curatedNew = processCuratedNews.obtenerCuratedNew();
             Optional<News> news = syncNews(curatedNew);
-            if (news.isPresent()) {
-                processCuratedNews.addCompleted(news.get().getId());
-                j++;
-            }
+
+            if(!news.isPresent())
+                continue;
+
+            processCuratedNews.addCompleted(news.get().getId());
+            j++;
+
         }
         long fin = System.currentTimeMillis();
         logger.info(j + " Articulos Sincronizados por el Thread " + Thread.currentThread().getName());
@@ -50,7 +53,10 @@ public class NewsDataManager implements Runnable {
 
     private Optional<News> syncNews(CuratedNew curatedNew) {
 
-        Source source = fuenteDao.sourceByExternalId(curatedNew.getSource().getId()+"");
+        Optional<Source> source = fuenteDao.sourceByExternalId(curatedNew.getSource().getId()+"");
+
+        if(!source.isPresent())
+            return Optional.empty();
 
         Story story;
         try {
@@ -62,7 +68,7 @@ public class NewsDataManager implements Runnable {
 
         News news = new News();
         news.addStory(story)
-                .addSource(source)
+                .addSource(source.get())
                 .addUrl(curatedNew.getLink())
                 .addExternalId(curatedNew.getId()+"")
                 .addTitle(curatedNew.getTitle())

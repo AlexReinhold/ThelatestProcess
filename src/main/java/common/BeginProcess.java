@@ -7,6 +7,7 @@ import datasource.J2DataSource;
 import datasource.TlDataSource;
 import datasource.ttrssDataSource;
 import elasticsearch.ElasticSearchService;
+import model.elasticsearch.NewsES;
 import model.elasticsearch.StoryES;
 import model.j2.Cluster;
 import model.j2.CuratedNew;
@@ -15,7 +16,9 @@ import org.apache.log4j.Logger;
 import resource.Process;
 import service.*;
 import javax.sql.DataSource;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -46,7 +49,7 @@ class BeginProcess {
 //            processDao.changeState(Process.NEWS.getId(), true);
 
             List<Cluster> clusterList = storyDao.getClusterListFromJ2();
-            System.out.println(clusterList.size());
+            System.out.println("Stories: "+clusterList.size());
 
             ProcessCluster processCluster = new ProcessCluster(clusterList);
             ExecutorService threadPool1 = Executors.newFixedThreadPool(threads);
@@ -62,7 +65,7 @@ class BeginProcess {
             }
 
             List<CuratedNew> curatedNews = newsDao.getCuratedNewsListFromJ2();
-            System.out.println(curatedNews.size());
+            System.out.println("News: "+curatedNews.size());
 
             ProcessCuratedNews processCuratedNews = new ProcessCuratedNews(curatedNews);
             ExecutorService threadPool2 = Executors.newFixedThreadPool(threads);
@@ -77,22 +80,90 @@ class BeginProcess {
             while (!threadPool2.isTerminated()) {
             }
 
-            for ( int id : processCluster.getCompleted()){
-                System.out.println("storyId : "+id);
+            System.out.println("elasticsearch");
+
+            ElasticSearchService elasticSearchService = new ElasticSearchService();
+
+//            if(!processCluster.getCompleted().isEmpty()){
+//                Optional<List<StoryES>> storyES = storyDao.getStoriesForES(processCluster.getCompleted());
+//                if(storyES.isPresent()){
+//                    System.out.println(storyES.get().size());
+//                    elasticSearchService.insertStories(storyES.get());
+//                }
+//            }
+
+            if(!processCuratedNews.getCompleted().isEmpty()){
+
+                System.out.printf("Sync Stories");
+                Optional<List<StoryES>> storyES = storyDao.getStoriesByNewsIdForES(processCuratedNews.getCompleted());
+                if(storyES.isPresent()){
+                    System.out.println(storyES.get().size());
+                    elasticSearchService.insertStories(storyES.get());
+                }else{
+                    System.out.println("NO stories");
+                }
+                System.out.println("Finished");
+                System.out.println("Sync News");
+
+                Optional<List<NewsES>> newsES = newsDao.getNewsForES(processCuratedNews.getCompleted());
+                if(newsES.isPresent()){
+                    System.out.println(newsES.get().size());
+                    elasticSearchService.insertNews(newsES.get());
+                }else{
+                    System.out.println("NO news");
+                }
+
+                System.out.println("Finished");
+
             }
 
-            for ( int id : processCuratedNews.getCompleted()){
-                System.out.println("newsId : "+id);
-            }
+            elasticSearchService.closeConnection();
+
+            System.out.println("conclosed");
 
             processDao.changeState(Process.NEWS.getId(), false);
 
-            if (storyDao.getClusterListFromJ2().size() > 0) {
-                this.start();
-            }
+//            if (storyDao.getClusterListFromJ2().size() > 0) {
+//                this.start();
+//            }
 
         }
 
+    }
+
+    private List<Integer> getList(){
+        List<Integer> list = new ArrayList<>();
+        list.add(4957602);
+        list.add(4957601);
+        list.add(4957600);
+        list.add(4957599);
+        list.add(4957598);
+        list.add(4957597);
+        list.add(4957596);
+        list.add(4957595);
+        list.add(4957594);
+        list.add(4957593);
+        list.add(4957592);
+        list.add(4957591);
+        list.add(4957590);
+        list.add(4957589);
+        list.add(4957588);
+        list.add(4957587);
+        list.add(4957586);
+        list.add(4957585);
+        list.add(4957584);
+        list.add(4957583);
+        list.add(4957582);
+        list.add(4957581);
+        list.add(4957580);
+        list.add(4957579);
+        list.add(4957578);
+        list.add(4957577);
+        list.add(4957576);
+        list.add(4957575);
+        list.add(4957574);
+        list.add(4957573);
+        return list;
     }
 
 }
