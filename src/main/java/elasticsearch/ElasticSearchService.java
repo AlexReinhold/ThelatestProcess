@@ -10,7 +10,11 @@ import org.apache.log4j.Logger;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.common.settings.ImmutableSettings;
+import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
+
+import java.net.InetAddress;
 import java.util.List;
 
 public class ElasticSearchService {
@@ -27,9 +31,11 @@ public class ElasticSearchService {
     }
 
     private void iniciarConexion() {
-
-        client = new TransportClient()
-                .addTransportAddress(new InetSocketTransportAddress("localhost", 9300));
+        Settings settings = ImmutableSettings.settingsBuilder()
+                .put("cluster.name", "elasticsearch").build();
+        client = new TransportClient(settings).addTransportAddress(new InetSocketTransportAddress("localhost", 9300));
+//        client = new TransportClient(settings).addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName("127.0.0.1"), 9300));
+//        client = new TransportClient(settings).addTransportAddress(new InetSocketTransportAddress("localhost", 9300));
     }
 
     public void closeConnection() {
@@ -41,10 +47,7 @@ public class ElasticSearchService {
         int created = 0;
         for (StoryES s : stories) {
             String json = new GsonBuilder()
-                    .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
-                    .serializeNulls()
-                    .create()
-                    .toJson(s);
+                    .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX").serializeNulls().create().toJson(s);
             IndexResponse response = client.prepareIndex(INDEX, STORY_TYPE, s.getId() + "")
                     .setSource(json)
                     .execute()
@@ -61,10 +64,7 @@ public class ElasticSearchService {
         int created = 0;
         for (NewsES n : news) {
             String json = new GsonBuilder()
-                    .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
-                    .serializeNulls()
-                    .create()
-                    .toJson(n);
+                    .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX").serializeNulls().create().toJson(n);
             IndexResponse response = client.prepareIndex(INDEX, NEWS_TYPE, n.getId() + "")
                     .setSource(json)
                     .execute()

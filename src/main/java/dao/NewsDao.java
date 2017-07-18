@@ -55,8 +55,8 @@ public class NewsDao {
         return news;
     }
 
-    public List<CuratedNew> getCuratedNewsListFromJ2() {
-        return j2Template.query(SQL.J2.SELECTS.UNPROCESSED_NEWS, new CuratedNewRowMapper<CuratedNew>());
+    public List<CuratedNew> getCuratedNewsListFromJ2(int categoryId) {
+        return j2Template.query(SQL.J2.SELECTS.UNPROCESSED_NEWS, new Object[]{categoryId}, new CuratedNewRowMapper<CuratedNew>());
     }
 
     public int updateNewsStateJ2(int id, boolean estado) {

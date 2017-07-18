@@ -1,5 +1,6 @@
 package common;
 
+import dao.CategoryDao;
 import dao.NewsDao;
 import dao.StoryDao;
 import dao.ProcessDao;
@@ -11,6 +12,7 @@ import model.elasticsearch.NewsES;
 import model.elasticsearch.StoryES;
 import model.j2.Cluster;
 import model.j2.CuratedNew;
+import model.tl.Category;
 import model.tl.Story;
 import org.apache.log4j.Logger;
 import resource.Process;
@@ -28,6 +30,7 @@ class BeginProcess {
     private StoryDao storyDao;
     private NewsDao newsDao;
     private ProcessDao processDao;
+    private CategoryDao categoryDao;
     private Logger logger;
 
     BeginProcess() throws Exception {
@@ -37,89 +40,95 @@ class BeginProcess {
         storyDao = new StoryDao(tlDs, j2Ds, ttrssDs);
         newsDao = new NewsDao(tlDs, j2Ds, ttrssDs);
         processDao = new ProcessDao(tlDs);
+        categoryDao = new CategoryDao(tlDs,j2Ds,ttrssDs);
         logger = Logger.getLogger(this.getClass().getName());
     }
 
     void start() throws Exception {
 
         boolean processingNews;
-        int threads = Runtime.getRuntime().availableProcessors();
-
+//        int threads = Runtime.getRuntime().availableProcessors();
+        int threads = 10;
         processingNews = processDao.state(Process.NEWS.getId());
-        if (!processingNews) {
 
+        if (!processingNews) {
             processDao.changeState(Process.NEWS.getId(), true);
 
-            List<Cluster> clusterList = storyDao.getClusterListFromJ2();
-            System.out.println("Stories: "+clusterList.size());
+            for (Category parentCat : categoryDao.getParentCategories()) {
 
-            ProcessCluster processCluster = new ProcessCluster(clusterList);
-            ExecutorService threadPool1 = Executors.newFixedThreadPool(threads);
-            Runnable storyDataManager = new StoryDataManager(tlDs, j2Ds, ttrssDs, processCluster);
+                List<Cluster> clusterList = storyDao.getClusterListFromJ2(parentCat.getExternalId());
+                logger.info(parentCat.getName()+" Stories: " + clusterList.size());
 
-            for (int i = 0; i < threads; i++) {
-                Thread t = new Thread(storyDataManager);
-                threadPool1.execute(t);
-            }
+                ProcessCluster processCluster = new ProcessCluster(clusterList);
+                ExecutorService threadPool1 = Executors.newFixedThreadPool(threads);
+                Runnable storyDataManager = new StoryDataManager(tlDs, j2Ds, ttrssDs, processCluster);
 
-            threadPool1.shutdown();
-            while (!threadPool1.isTerminated()) {
-            }
-
-            List<CuratedNew> curatedNews = newsDao.getCuratedNewsListFromJ2();
-            System.out.println("News: "+curatedNews.size());
-
-            ProcessCuratedNews processCuratedNews = new ProcessCuratedNews(curatedNews);
-            ExecutorService threadPool2 = Executors.newFixedThreadPool(threads);
-            Runnable newsDataManager = new NewsDataManager(tlDs, j2Ds, ttrssDs, processCuratedNews);
-
-            for (int i = 0; i < threads; i++) {
-                Thread t = new Thread(newsDataManager);
-                threadPool2.execute(t);
-            }
-
-            threadPool2.shutdown();
-            while (!threadPool2.isTerminated()) {
-            }
-
-
-//            if(!processCluster.getCompleted().isEmpty()){
-//                Optional<List<StoryES>> storyES = storyDao.getStoriesForES(processCluster.getCompleted());
-//                if(storyES.isPresent()){
-//                    System.out.println(storyES.get().size());
-//                    elasticSearchService.insertStories(storyES.get());
-//                }
-//            }
-
-            if(!processCuratedNews.getCompleted().isEmpty()){
-                ElasticSearchService elasticSearchService = new ElasticSearchService();
-                Optional<List<StoryES>> storyES = storyDao.getStoriesByNewsIdForES(processCuratedNews.getCompleted());
-                if(storyES.isPresent()){
-                    System.out.println(storyES.get().size());
-                    elasticSearchService.insertStories(storyES.get());
-                }else{
-                    logger.info("NO stories");
+                for (int i = 0; i < threads; i++) {
+                    Thread t = new Thread(storyDataManager);
+                    threadPool1.execute(t);
                 }
 
-                Optional<List<NewsES>> newsES = newsDao.getNewsForES(processCuratedNews.getCompleted());
-                if(newsES.isPresent()){
-                    System.out.println(newsES.get().size());
-                    elasticSearchService.insertNews(newsES.get());
-                }else{
-                    logger.info("NO news");
+                threadPool1.shutdown();
+                while (!threadPool1.isTerminated()) {
                 }
-                elasticSearchService.closeConnection();
+
+                List<CuratedNew> curatedNews = newsDao.getCuratedNewsListFromJ2(parentCat.getExternalId());
+                logger.info(parentCat.getName()+" News: " + curatedNews.size());
+
+                ProcessCuratedNews processCuratedNews = new ProcessCuratedNews(curatedNews);
+                ExecutorService threadPool2 = Executors.newFixedThreadPool(threads);
+                Runnable newsDataManager = new NewsDataManager(tlDs, j2Ds, ttrssDs, processCuratedNews);
+
+                for (int i = 0; i < threads; i++) {
+                    Thread t = new Thread(newsDataManager);
+                    threadPool2.execute(t);
+                }
+
+                threadPool2.shutdown();
+                while (!threadPool2.isTerminated()) {
+                }
+
+
+    //            if(!processCluster.getCompleted().isEmpty()){
+    //                Optional<List<StoryES>> storyES = storyDao.getStoriesForES(processCluster.getCompleted());
+    //                if(storyES.isPresent()){
+    //                    System.out.println(storyES.get().size());
+    //                    elasticSearchService.insertStories(storyES.get());
+    //                }
+    //            }
+
+                if (!processCuratedNews.getCompleted().isEmpty()) {
+                    ElasticSearchService elasticSearchService = new ElasticSearchService();
+                    Optional<List<StoryES>> storyES = storyDao.getStoriesByNewsIdForES(processCuratedNews.getCompleted());
+                    if (storyES.isPresent()) {
+                        System.out.println(storyES.get().size());
+                        elasticSearchService.insertStories(storyES.get());
+                    } else {
+                        logger.info("NO stories");
+                    }
+
+                    Optional<List<NewsES>> newsES = newsDao.getNewsForES(processCuratedNews.getCompleted());
+                    if (newsES.isPresent()) {
+                        System.out.println(newsES.get().size());
+                        elasticSearchService.insertNews(newsES.get());
+                    } else {
+                        logger.info("NO news");
+                    }
+                    elasticSearchService.closeConnection();
+                }
+
+    //            if (storyDao.getClusterListFromJ2().size() > 0) {
+    //                this.start();
+    //            }
+                logger.info("Finisihed "+parentCat.getName());
+                logger.info("------------------------------");
+
             }
 
             processDao.changeState(Process.NEWS.getId(), false);
 
-//            if (storyDao.getClusterListFromJ2().size() > 0) {
-//                this.start();
-//            }
-
         }
 
     }
-
 
 }

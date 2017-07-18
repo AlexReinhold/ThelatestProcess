@@ -17,6 +17,7 @@ public class TlDataSource {
 //        dataSource.setUsername("dev_thelatest"); // prod
 //        dataSource.setPassword("!dev_thelatest!2014"); // prod
         dataSource.setUrl("jdbc:postgresql://localhost:5432/thelatest");
+//        dataSource.setUrl("jdbc:postgresql://localhost:5432/dev_thelatest");
     }
 
     public BasicDataSource getDatasource() {

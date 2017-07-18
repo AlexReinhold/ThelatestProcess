@@ -44,6 +44,17 @@ public class SQL {
                     "FROM tl_category " +
                     "WHERE external_id = ? ";
 
+            public static final String PARENT_CATEGORIES = "" +
+                    "SELECT id, " +
+                    "       parent_id, " +
+                    "       name, " +
+                    "       active, " +
+                    "       menu_order, " +
+                    "       external_id, " +
+                    "       slug " +
+                    "FROM tl_category " +
+                    "WHERE parent_id is null ";
+
             public static final String SOURCE_BY_EXTERNAL_ID = "" +
                     "SELECT id, " +
                     "       name, " +
@@ -233,7 +244,7 @@ public class SQL {
                     "     INNER JOIN fl_news_content nc ON nc.id = cn.id " +
                     "     INNER JOIN fl_news_img ni ON ni.id = cn.id " +
                     "WHERE cn.clustered = TRUE " +
-                    "AND cn.synchronized = FALSE " +
+                    "AND cn.synchronized = FALSE AND cn.category_id = ? " +
                     "ORDER BY cn.id ASC";
 
             public static final String UNPROCESSED_STORIES = "" +
@@ -246,7 +257,7 @@ public class SQL {
                     "       synchronized, " +
                     "       sound " +
                     "FROM fl_clusters " +
-                    "WHERE synchronized = FALSE " +
+                    "WHERE synchronized = FALSE AND main_cat_id = ?" +
                     "ORDER BY id ASC";
         }
 

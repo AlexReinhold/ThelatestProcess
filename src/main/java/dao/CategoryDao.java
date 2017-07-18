@@ -6,6 +6,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import resource.SQL;
 import javax.sql.DataSource;
+import java.util.List;
 import java.util.Optional;
 
 public class CategoryDao {
@@ -27,6 +28,12 @@ public class CategoryDao {
             System.out.println("not found category: "+externalId);
             return Optional.empty();
         }
+    }
+
+    public List<Category> getParentCategories(){
+
+        return thelatestTemplate.query(SQL.TL.SELECTS.PARENT_CATEGORIES, new Object[]{}, new CategoryRowMapper<Category>());
+
     }
 
 }

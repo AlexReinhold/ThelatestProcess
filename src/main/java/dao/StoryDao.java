@@ -61,8 +61,8 @@ public class StoryDao {
         return j2Template.update(SQL.J2.UPDATES.CHANGE_STORY_STATE, true, storyId);
     }
 
-    public List<Cluster> getClusterListFromJ2() {
-        return j2Template.query(SQL.J2.SELECTS.UNPROCESSED_STORIES, new ClusterRowMapper<Cluster>());
+    public List<Cluster> getClusterListFromJ2(int categoryId) {
+        return j2Template.query(SQL.J2.SELECTS.UNPROCESSED_STORIES, new Object[]{categoryId}, new ClusterRowMapper<Cluster>());
     }
 
     public Optional<List<StoryES>> getStoriesForES(List<Integer> listId){

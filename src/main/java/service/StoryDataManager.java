@@ -37,6 +37,7 @@ public class StoryDataManager implements Runnable {
             i++;
 
         }
+
         logger.info(i + " stories sync by the Thread " + Thread.currentThread().getName());
         logger.info("--------------------------------------------------");
         long fin = System.currentTimeMillis();
