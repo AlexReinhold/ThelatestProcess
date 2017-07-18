@@ -28,6 +28,7 @@ class BeginProcess {
     private StoryDao storyDao;
     private NewsDao newsDao;
     private ProcessDao processDao;
+    private Logger logger;
 
     BeginProcess() throws Exception {
         j2Ds = new J2DataSource().getDatasource();
@@ -36,6 +37,7 @@ class BeginProcess {
         storyDao = new StoryDao(tlDs, j2Ds, ttrssDs);
         newsDao = new NewsDao(tlDs, j2Ds, ttrssDs);
         processDao = new ProcessDao(tlDs);
+        logger = Logger.getLogger(this.getClass().getName());
     }
 
     void start() throws Exception {
@@ -46,7 +48,7 @@ class BeginProcess {
         processingNews = processDao.state(Process.NEWS.getId());
         if (!processingNews) {
 
-//            processDao.changeState(Process.NEWS.getId(), true);
+            processDao.changeState(Process.NEWS.getId(), true);
 
             List<Cluster> clusterList = storyDao.getClusterListFromJ2();
             System.out.println("Stories: "+clusterList.size());
@@ -80,9 +82,6 @@ class BeginProcess {
             while (!threadPool2.isTerminated()) {
             }
 
-            System.out.println("elasticsearch");
-
-            ElasticSearchService elasticSearchService = new ElasticSearchService();
 
 //            if(!processCluster.getCompleted().isEmpty()){
 //                Optional<List<StoryES>> storyES = storyDao.getStoriesForES(processCluster.getCompleted());
@@ -93,33 +92,24 @@ class BeginProcess {
 //            }
 
             if(!processCuratedNews.getCompleted().isEmpty()){
-
-                System.out.printf("Sync Stories");
+                ElasticSearchService elasticSearchService = new ElasticSearchService();
                 Optional<List<StoryES>> storyES = storyDao.getStoriesByNewsIdForES(processCuratedNews.getCompleted());
                 if(storyES.isPresent()){
                     System.out.println(storyES.get().size());
                     elasticSearchService.insertStories(storyES.get());
                 }else{
-                    System.out.println("NO stories");
+                    logger.info("NO stories");
                 }
-                System.out.println("Finished");
-                System.out.println("Sync News");
 
                 Optional<List<NewsES>> newsES = newsDao.getNewsForES(processCuratedNews.getCompleted());
                 if(newsES.isPresent()){
                     System.out.println(newsES.get().size());
                     elasticSearchService.insertNews(newsES.get());
                 }else{
-                    System.out.println("NO news");
+                    logger.info("NO news");
                 }
-
-                System.out.println("Finished");
-
+                elasticSearchService.closeConnection();
             }
-
-            elasticSearchService.closeConnection();
-
-            System.out.println("conclosed");
 
             processDao.changeState(Process.NEWS.getId(), false);
 
@@ -131,39 +121,5 @@ class BeginProcess {
 
     }
 
-    private List<Integer> getList(){
-        List<Integer> list = new ArrayList<>();
-        list.add(4957602);
-        list.add(4957601);
-        list.add(4957600);
-        list.add(4957599);
-        list.add(4957598);
-        list.add(4957597);
-        list.add(4957596);
-        list.add(4957595);
-        list.add(4957594);
-        list.add(4957593);
-        list.add(4957592);
-        list.add(4957591);
-        list.add(4957590);
-        list.add(4957589);
-        list.add(4957588);
-        list.add(4957587);
-        list.add(4957586);
-        list.add(4957585);
-        list.add(4957584);
-        list.add(4957583);
-        list.add(4957582);
-        list.add(4957581);
-        list.add(4957580);
-        list.add(4957579);
-        list.add(4957578);
-        list.add(4957577);
-        list.add(4957576);
-        list.add(4957575);
-        list.add(4957574);
-        list.add(4957573);
-        return list;
-    }
 
 }

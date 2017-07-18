@@ -6,6 +6,7 @@ import dao.StoryDao;
 import model.elasticsearch.NewsES;
 import model.elasticsearch.StoryES;
 import model.elasticsearch.WTM;
+import org.apache.log4j.Logger;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
@@ -18,9 +19,11 @@ public class ElasticSearchService {
     private Client client;
     private static final String INDEX = "global" ,
                                 NEWS_TYPE = "news", WTM_TYPE = "wtm", STORY_TYPE = "story", EXAMPLE_TYPE = "example";
+    private Logger logger;
 
     public ElasticSearchService() {
         this.iniciarConexion();
+        logger = Logger.getLogger(this.getClass().getName());
     }
 
     private void iniciarConexion() {
@@ -35,39 +38,42 @@ public class ElasticSearchService {
 
     public void insertStories(List<StoryES> stories){
 
+        int created = 0;
         for (StoryES s : stories) {
             String json = new GsonBuilder()
                     .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
                     .serializeNulls()
                     .create()
                     .toJson(s);
-            System.out.println("Story -> "+json);
             IndexResponse response = client.prepareIndex(INDEX, STORY_TYPE, s.getId() + "")
                     .setSource(json)
                     .execute()
                     .actionGet();
-            System.out.println("storyId: "+s.getId()+" / -> "+response.isCreated());
-        }
+            if(response.isCreated())
+                created++;
 
+        }
+        logger.info("Total indexed stories: "+ created);
     }
 
     public void insertNews(List<NewsES> news){
 
+        int created = 0;
         for (NewsES n : news) {
             String json = new GsonBuilder()
                     .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
                     .serializeNulls()
                     .create()
                     .toJson(n);
-            System.out.println("News -> "+json);
             IndexResponse response = client.prepareIndex(INDEX, NEWS_TYPE, n.getId() + "")
                     .setSource(json)
                     .execute()
                     .actionGet();
-            System.out.println("newsId: "+n.getId()+" / -> "+response.isCreated());
+            if(response.isCreated())
+                created++;
 
         }
-
+        logger.info("Total indexed news: "+ created);
     }
 
     public void insertWTM(List<WTM> wtm){

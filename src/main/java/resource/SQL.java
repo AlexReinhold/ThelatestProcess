@@ -181,6 +181,16 @@ public class SQL {
                     "SET state = ? " +
                     "WHERE id = ?";
 
+            public static final String CHANGE_STORY_ES_STATE = "" +
+                    "UPDATE fl_clusters " +
+                    "SET synchronized = ? " +
+                    "WHERE id = ?";
+
+            public static final String CHANGE_NEWS_ES_STATE = "" +
+                    "UPDATE fl_curated_news " +
+                    "SET synchronized = ? " +
+                    "WHERE id = ?";
+
         }
 
     }

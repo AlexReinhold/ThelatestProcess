@@ -25,11 +25,9 @@ public class StoryDataManager implements Runnable {
     public void run() {
         long inicio = System.currentTimeMillis();
         logger = Logger.getLogger(Thread.currentThread().getName());
-        System.out.println("Init thread"+Thread.currentThread().getName());
         int i = 0;
         while (processCluster.isFinish()) {
             Cluster cluster = processCluster.obtenerCluster();
-            System.out.println("cluster: "+cluster.getId());
             Optional<Story> story = syncStories(cluster);
 
             if(!story.isPresent())
