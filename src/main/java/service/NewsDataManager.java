@@ -38,12 +38,11 @@ public class NewsDataManager implements Runnable {
             CuratedNew curatedNew = processCuratedNews.obtenerCuratedNew();
             Optional<News> news = syncNews(curatedNew);
 
-            if(!news.isPresent())
-                continue;
-
-            processCuratedNews.addCompleted(news.get().getId());
-            j++;
-
+            if (news.isPresent())
+            {
+                processCuratedNews.addCompleted(news.get().getId());
+                j++;
+            }
         }
         long fin = System.currentTimeMillis();
         logger.info(j + " Articulos Sincronizados por el Thread " + Thread.currentThread().getName());

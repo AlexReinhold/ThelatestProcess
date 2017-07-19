@@ -30,12 +30,10 @@ public class StoryDataManager implements Runnable {
             Cluster cluster = processCluster.obtenerCluster();
             Optional<Story> story = syncStories(cluster);
 
-            if(!story.isPresent())
-                continue;
-
-            processCluster.addCompleted(story.get().getId());
-            i++;
-
+            if(story.isPresent()){
+                processCluster.addCompleted(story.get().getId());
+                i++;
+            }
         }
 
         logger.info(i + " stories sync by the Thread " + Thread.currentThread().getName());

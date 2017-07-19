@@ -19,7 +19,6 @@ public class ProcessCuratedNews {
     public synchronized CuratedNew obtenerCuratedNew() {
         while (J2News.isEmpty()) {
             try {
-                System.out.println("espera");
                 wait();
             } catch (InterruptedException ex) {
 //                System.err.println(ex);
