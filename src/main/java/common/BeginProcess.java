@@ -47,8 +47,8 @@ class BeginProcess {
     void start() throws Exception {
 
         boolean processingNews;
-//        int threads = Runtime.getRuntime().availableProcessors();
-        int threads = 10;
+        int threads = Runtime.getRuntime().availableProcessors();
+//        int threads = 10;
         processingNews = processDao.state(Process.NEWS.getId());
 
         if (!processingNews) {
