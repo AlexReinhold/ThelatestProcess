@@ -33,7 +33,7 @@ public class ProcessCluster {
         return !J2Stories.isEmpty();
     }
 
-    public void addCompleted(int id){
+    public synchronized void addCompleted(int id){
         completed.add(id);
     }
 

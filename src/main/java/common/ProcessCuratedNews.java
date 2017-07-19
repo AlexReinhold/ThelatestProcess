@@ -19,6 +19,7 @@ public class ProcessCuratedNews {
     public synchronized CuratedNew obtenerCuratedNew() {
         while (J2News.isEmpty()) {
             try {
+                System.out.println("espera");
                 wait();
             } catch (InterruptedException ex) {
 //                System.err.println(ex);
@@ -33,7 +34,7 @@ public class ProcessCuratedNews {
         return !J2News.isEmpty();
     }
 
-    public void addCompleted(int id){
+    public synchronized void addCompleted(int id){
         completed.add(id);
     }
 
