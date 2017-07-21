@@ -3,7 +3,7 @@ package dao;
 import mapper.elasticsearch.NewsESRowMapper;
 import mapper.j2.CuratedNewRowMapper;
 import model.elasticsearch.NewsES;
-import model.j2.CuratedNew;
+import model.j2.CuratedNews;
 import model.tl.News;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -55,8 +55,8 @@ public class NewsDao {
         return news;
     }
 
-    public List<CuratedNew> getCuratedNewsListFromJ2(int categoryId) {
-        return j2Template.query(SQL.J2.SELECTS.UNPROCESSED_NEWS, new Object[]{categoryId}, new CuratedNewRowMapper<CuratedNew>());
+    public List<CuratedNews> getCuratedNewsListFromJ2(int categoryId) {
+        return j2Template.query(SQL.J2.SELECTS.UNPROCESSED_NEWS, new Object[]{categoryId}, new CuratedNewRowMapper<CuratedNews>());
     }
 
     public int updateNewsStateJ2(int id, boolean estado) {

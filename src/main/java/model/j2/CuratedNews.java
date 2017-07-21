@@ -4,7 +4,7 @@ import model.ttrss.Source;
 
 import java.sql.Timestamp;
 
-public class CuratedNew {
+public class CuratedNews {
     private int id;
     private String title;
     private String link;
@@ -21,14 +21,14 @@ public class CuratedNew {
     private Cluster cluster;
     private String image;
 
-    public CuratedNew() {
+    public CuratedNews() {
     }
 
     public int getId() {
         return id;
     }
 
-    public CuratedNew addId(int id) {
+    public CuratedNews addId(int id) {
         this.id = id;
         return this;
     }
@@ -37,7 +37,7 @@ public class CuratedNew {
         return title;
     }
 
-    public CuratedNew addTitle(String title) {
+    public CuratedNews addTitle(String title) {
         this.title = title;
         return this;
     }
@@ -46,7 +46,7 @@ public class CuratedNew {
         return link;
     }
 
-    public CuratedNew addLink(String link) {
+    public CuratedNews addLink(String link) {
         this.link = link;
         return this;
     }
@@ -55,7 +55,7 @@ public class CuratedNew {
         return pubDate;
     }
 
-    public CuratedNew addPubDate(Timestamp pubDate) {
+    public CuratedNews addPubDate(Timestamp pubDate) {
         this.pubDate = pubDate;
         return this;
     }
@@ -64,7 +64,7 @@ public class CuratedNew {
         return snippet;
     }
 
-    public CuratedNew addSnippet(String snippet) {
+    public CuratedNews addSnippet(String snippet) {
         this.snippet = snippet;
         return this;
     }
@@ -73,7 +73,7 @@ public class CuratedNew {
         return dateEntered;
     }
 
-    public CuratedNew addDateEntered(Timestamp dateEntered) {
+    public CuratedNews addDateEntered(Timestamp dateEntered) {
         this.dateEntered = dateEntered;
         return this;
     }
@@ -82,7 +82,7 @@ public class CuratedNew {
         return author;
     }
 
-    public CuratedNew addAuthor(String author) {
+    public CuratedNews addAuthor(String author) {
         this.author = author;
         return this;
     }
@@ -91,7 +91,7 @@ public class CuratedNew {
         return categoryId;
     }
 
-    public CuratedNew addCategoryId(int categoryId) {
+    public CuratedNews addCategoryId(int categoryId) {
         this.categoryId = categoryId;
         return this;
     }
@@ -100,7 +100,7 @@ public class CuratedNew {
         return subCategoryId;
     }
 
-    public CuratedNew addSubCategoryId(int subCategoryId) {
+    public CuratedNews addSubCategoryId(int subCategoryId) {
         this.subCategoryId = subCategoryId;
         return this;
     }
@@ -109,7 +109,7 @@ public class CuratedNew {
         return source;
     }
 
-    public CuratedNew addSource(Source source) {
+    public CuratedNews addSource(Source source) {
         this.source = source;
         return this;
     }
@@ -118,7 +118,7 @@ public class CuratedNew {
         return clustered;
     }
 
-    public CuratedNew addClustered(boolean clustered) {
+    public CuratedNews addClustered(boolean clustered) {
         this.clustered = clustered;
         return this;
     }
@@ -127,7 +127,7 @@ public class CuratedNew {
         return synchronizeD;
     }
 
-    public CuratedNew addSynchronizeD(boolean synchronizeD) {
+    public CuratedNews addSynchronizeD(boolean synchronizeD) {
         this.synchronizeD = synchronizeD;
         return this;
     }
@@ -136,7 +136,7 @@ public class CuratedNew {
         return newsContent;
     }
 
-    public CuratedNew addNewsContent(NewsContent newsContent) {
+    public CuratedNews addNewsContent(NewsContent newsContent) {
         this.newsContent = newsContent;
         return this;
     }
@@ -145,7 +145,7 @@ public class CuratedNew {
         return cluster;
     }
 
-    public CuratedNew addCluster(Cluster cluster) {
+    public CuratedNews addCluster(Cluster cluster) {
         this.cluster = cluster;
         return this;
     }
@@ -154,7 +154,7 @@ public class CuratedNew {
         return image;
     }
 
-    public CuratedNew addImage(String image) {
+    public CuratedNews addImage(String image) {
         this.image = image;
         return this;
     }

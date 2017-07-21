@@ -1,7 +1,7 @@
 package mapper.j2;
 
 import model.j2.Cluster;
-import model.j2.CuratedNew;
+import model.j2.CuratedNews;
 import model.j2.NewsContent;
 import model.ttrss.Source;
 import org.springframework.jdbc.core.RowMapper;
@@ -9,10 +9,10 @@ import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class CuratedNewRowMapper<T> implements RowMapper<CuratedNew> {
+public class CuratedNewRowMapper<T> implements RowMapper<CuratedNews> {
 
-    public CuratedNew mapRow(ResultSet rs, int rowNum)  throws SQLException {
-        return new CuratedNew()
+    public CuratedNews mapRow(ResultSet rs, int rowNum)  throws SQLException {
+        return new CuratedNews()
         .addId(rs.getInt("cn_id"))
         .addTitle(rs.getString("cn_title"))
         .addLink(rs.getString("cn_link"))

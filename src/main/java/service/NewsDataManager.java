@@ -4,7 +4,7 @@ import common.ProcessCuratedNews;
 import dao.SourceDao;
 import dao.NewsDao;
 import dao.StoryDao;
-import model.j2.CuratedNew;
+import model.j2.CuratedNews;
 import model.tl.*;
 import model.tl.Source;
 import org.apache.log4j.Logger;
@@ -31,12 +31,15 @@ public class NewsDataManager implements Runnable {
 
 
     public void run() {
-        long inicio = System.currentTimeMillis();
+        long start = System.currentTimeMillis();
         logger = Logger.getLogger(Thread.currentThread().getName());
         int j = 0;
         while (processCuratedNews.isFinish()) {
-            CuratedNew curatedNew = processCuratedNews.obtenerCuratedNew();
-            Optional<News> news = syncNews(curatedNew);
+            Optional<CuratedNews> curatedNew = processCuratedNews.getCuratedNews();
+            if(!curatedNew.isPresent())
+                continue;
+
+            Optional<News> news = syncNews(curatedNew.get());
 
             if (news.isPresent())
             {
@@ -44,13 +47,13 @@ public class NewsDataManager implements Runnable {
                 j++;
             }
         }
-        long fin = System.currentTimeMillis();
-        logger.info(j + " Articulos Sincronizados por el Thread " + Thread.currentThread().getName());
-        logger.info("Articulos y noticias Sincronizadas En " + (fin - inicio) + " ms");
+        long end = System.currentTimeMillis();
+        logger.info(j + " news sync by the Thread " + Thread.currentThread().getName());
+        logger.info("News sync in " + (end - start) + " ms");
         logger.info("-----------------------------------------------------");
     }
 
-    private Optional<News> syncNews(CuratedNew curatedNew) {
+    private Optional<News> syncNews(CuratedNews curatedNew) {
 
         Optional<Source> source = fuenteDao.sourceByExternalId(curatedNew.getSource().getId()+"");
 

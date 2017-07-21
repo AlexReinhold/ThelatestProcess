@@ -11,14 +11,12 @@ import elasticsearch.ElasticSearchService;
 import model.elasticsearch.NewsES;
 import model.elasticsearch.StoryES;
 import model.j2.Cluster;
-import model.j2.CuratedNew;
+import model.j2.CuratedNews;
 import model.tl.Category;
-import model.tl.Story;
 import org.apache.log4j.Logger;
 import resource.Process;
 import service.*;
 import javax.sql.DataSource;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
@@ -54,6 +52,7 @@ class BeginProcess {
         if (!processingNews) {
             processDao.changeState(Process.NEWS.getId(), true);
 
+            ElasticSearchService elasticSearchService = new ElasticSearchService();
             for (Category parentCat : categoryDao.getParentCategories()) {
 
                 List<Cluster> clusterList = storyDao.getClusterListFromJ2(parentCat.getExternalId());
@@ -72,7 +71,7 @@ class BeginProcess {
                 while (!threadPool1.isTerminated()) {
                 }
 
-                List<CuratedNew> curatedNews = newsDao.getCuratedNewsListFromJ2(parentCat.getExternalId());
+                List<CuratedNews> curatedNews = newsDao.getCuratedNewsListFromJ2(parentCat.getExternalId());
                 logger.info(parentCat.getName()+" News: " + curatedNews.size());
 
                 ProcessCuratedNews processCuratedNews = new ProcessCuratedNews(curatedNews);
@@ -98,23 +97,22 @@ class BeginProcess {
     //            }
 
                 if (!processCuratedNews.getCompleted().isEmpty()) {
-                    ElasticSearchService elasticSearchService = new ElasticSearchService();
+                    logger.info("Sync stories in ES");
                     Optional<List<StoryES>> storyES = storyDao.getStoriesByNewsIdForES(processCuratedNews.getCompleted());
                     if (storyES.isPresent()) {
-                        System.out.println(storyES.get().size());
                         elasticSearchService.insertStories(storyES.get());
                     } else {
-                        logger.info("NO stories");
+                        logger.info("NO stories to Sync");
                     }
 
+                    logger.info("Sync news in ES");
                     Optional<List<NewsES>> newsES = newsDao.getNewsForES(processCuratedNews.getCompleted());
                     if (newsES.isPresent()) {
-                        System.out.println(newsES.get().size());
                         elasticSearchService.insertNews(newsES.get());
                     } else {
-                        logger.info("NO news");
+                        logger.info("NO news to Sync");
                     }
-                    elasticSearchService.closeConnection();
+
                 }
 
     //            if (storyDao.getClusterListFromJ2().size() > 0) {
@@ -124,9 +122,13 @@ class BeginProcess {
                 logger.info("------------------------------");
 
             }
-
+            elasticSearchService.closeConnection();
             processDao.changeState(Process.NEWS.getId(), false);
-
+            logger.info("Finisihed Process");
+            logger.info("------------------------------");
+        }else{
+            logger.info("There is already a running process");
+            logger.info("------------------------------");
         }
 
     }

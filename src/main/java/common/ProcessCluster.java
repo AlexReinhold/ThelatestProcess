@@ -2,9 +2,7 @@ package common;
 
 import model.j2.Cluster;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class ProcessCluster {
 
@@ -12,21 +10,25 @@ public class ProcessCluster {
     private List<Integer> completed;
 
     public ProcessCluster(List<Cluster> J2Stories) {
-        this.J2Stories = J2Stories;
+        this.J2Stories = Collections.synchronizedList(J2Stories);
         this.completed = Collections.synchronizedList( new ArrayList<>() );
     }
 
-    public synchronized Cluster obtenerCluster() {
-        while (J2Stories.isEmpty()) {
-            try {
-                wait();
-            } catch (InterruptedException ex) {
-//                System.err.println(ex);
-                ex.printStackTrace();
-            }
-        }
-        notify();
-        return J2Stories.remove(0);
+    public synchronized Optional<Cluster> getCluster() {
+//        while (J2Stories.isEmpty()) {
+//            try {
+//                wait();
+//            } catch (InterruptedException ex) {
+//                ex.printStackTrace();
+//            }
+//        }
+
+        J2Stories.isEmpty();
+
+        if(J2Stories.isEmpty())
+            return Optional.empty();
+
+        return Optional.of(J2Stories.remove(0));
     }
 
     public boolean isFinish() {

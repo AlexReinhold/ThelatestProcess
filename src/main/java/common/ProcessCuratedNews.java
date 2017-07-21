@@ -1,32 +1,38 @@
 package common;
 
-import model.j2.CuratedNew;
+import model.j2.CuratedNews;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class ProcessCuratedNews {
 
-    List<CuratedNew> J2News;
-    private List<Integer> completed;
+    private List<CuratedNews> J2News = new LinkedList<>();
+    private List<Integer> completed = new LinkedList<>();
 
-    public ProcessCuratedNews(List<CuratedNew> J2News) {
-        this.J2News = J2News;
+    public ProcessCuratedNews(List<CuratedNews> J2News) {
+        this.J2News = Collections.synchronizedList(J2News);
         this.completed = Collections.synchronizedList( new ArrayList<>() );
     }
 
-    public synchronized CuratedNew obtenerCuratedNew() {
-        while (J2News.isEmpty()) {
-            try {
-                wait();
-            } catch (InterruptedException ex) {
-//                System.err.println(ex);
-                ex.printStackTrace();
-            }
-        }
-        notify();
-        return J2News.remove(0);
+    public synchronized Optional<CuratedNews> getCuratedNews() {
+
+//        while (J2News.isEmpty()) {
+//            try {
+//                System.out.println("wait");
+//                wait();
+//                System.out.println("done");
+//            } catch (InterruptedException ex) {
+//                ex.printStackTrace();
+//            }
+//        }
+
+        if(J2News.isEmpty())
+            return Optional.empty();
+
+        return Optional.of(J2News.remove(0));
+
     }
 
     public boolean isFinish() {

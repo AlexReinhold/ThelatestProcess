@@ -23,12 +23,15 @@ public class StoryDataManager implements Runnable {
     }
 
     public void run() {
-        long inicio = System.currentTimeMillis();
+        long start = System.currentTimeMillis();
         logger = Logger.getLogger(Thread.currentThread().getName());
         int i = 0;
         while (processCluster.isFinish()) {
-            Cluster cluster = processCluster.obtenerCluster();
-            Optional<Story> story = syncStories(cluster);
+            Optional<Cluster> cluster = processCluster.getCluster();
+            if(!cluster.isPresent())
+                continue;
+
+            Optional<Story> story = syncStories(cluster.get());
 
             if(story.isPresent()){
                 processCluster.addCompleted(story.get().getId());
@@ -38,8 +41,8 @@ public class StoryDataManager implements Runnable {
 
         logger.info(i + " stories sync by the Thread " + Thread.currentThread().getName());
         logger.info("--------------------------------------------------");
-        long fin = System.currentTimeMillis();
-        logger.info("Stories sync in " + (fin - inicio) + " ms");
+        long end = System.currentTimeMillis();
+        logger.info("Stories sync in " + (end - start) + " ms");
         logger.info("-----------------------------------------------------");
     }
 

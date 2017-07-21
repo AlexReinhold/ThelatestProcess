@@ -11,7 +11,7 @@ public class ProcessNews {
         this.unprocessedNews = unprocessedNews;
     }
 
-    public synchronized UnprocessedNews obtenerArticulo(){
+    public synchronized UnprocessedNews getUnprocessedNews(){
         while(unprocessedNews.isEmpty()){
             try {
                 wait();
