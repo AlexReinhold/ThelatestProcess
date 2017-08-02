@@ -19,7 +19,7 @@ public class NewsESRowMapper<T> implements RowMapper<NewsES> {
             .addImgUrl(rs.getString("imgurl"))
             .addUrl(rs.getString("url"))
             .addSource(new Source().addId(rs.getInt("source_id"))
-                .addName("sosurce_name"))
+                .addName(rs.getString("source_name")))
             .addStory(news.new Story().addId(rs.getInt("story_id"))
                 .addName(rs.getString("story_name"))
                 .addSlug(rs.getString("story_slug"))
