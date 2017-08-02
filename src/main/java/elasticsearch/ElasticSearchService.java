@@ -14,8 +14,11 @@ import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 
-import java.net.InetAddress;
+import java.util.Comparator;
+import java.util.stream.Collectors;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
 public class ElasticSearchService {
 
@@ -43,8 +46,12 @@ public class ElasticSearchService {
 
     public void insertStories(List<StoryES> stories){
 
+        List<StoryES> unique = stories.stream()
+                .collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparingInt(StoryES::getId))),
+                        ArrayList::new));
+
         int created = 0;
-        for (StoryES s : stories) {
+        for (StoryES s : unique) {
             String json = new GsonBuilder()
                     .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX").serializeNulls().create().toJson(s);
             IndexResponse response = client.prepareIndex(INDEX, STORY_TYPE, s.getId() + "")
@@ -60,8 +67,12 @@ public class ElasticSearchService {
 
     public void insertNews(List<NewsES> news){
 
+        List<NewsES> unique = news.stream()
+                .collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparingInt(NewsES::getId))),
+                        ArrayList::new));
+
         int created = 0;
-        for (NewsES n : news) {
+        for (NewsES n : unique) {
             String json = new GsonBuilder()
                     .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX").serializeNulls().create().toJson(n);
             IndexResponse response = client.prepareIndex(INDEX, NEWS_TYPE, n.getId()+"")
