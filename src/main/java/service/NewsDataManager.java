@@ -68,15 +68,18 @@ public class NewsDataManager implements Runnable {
             return Optional.empty();
         }
 
+        String title = curatedNew.getTitle().length()<=300 ? curatedNew.getTitle() : curatedNew.getTitle().substring(0,300);
+        String author = curatedNew.getAuthor().length()<=200 ? curatedNew.getAuthor() : curatedNew.getAuthor().substring(0,200);
+
         News news = new News();
         news.addStory(story)
                 .addSource(source.get())
                 .addUrl(curatedNew.getLink())
                 .addExternalId(curatedNew.getId()+"")
-                .addTitle(curatedNew.getTitle())
+                .addTitle(title)
                 .addSnippet(curatedNew.getSnippet())
                 .addImgUrl(curatedNew.getImage())
-                .addAuthor(curatedNew.getAuthor())
+                .addAuthor(author)
                 .addScore(0)
                 .addPubDate(curatedNew.getPubDate())
                 .addAddedDate(curatedNew.getDateEntered())
