@@ -29,7 +29,6 @@ public class NewsDataManager implements Runnable {
         this.processCuratedNews = pcn;
     }
 
-
     public void run() {
         long start = System.currentTimeMillis();
         logger = Logger.getLogger(Thread.currentThread().getName());

@@ -34,8 +34,8 @@ public class Category {
         return parentId;
     }
 
-    public Category addParentId(int àrentId) {
-        this.parentId = àrentId;
+    public Category addParentId(int parentId) {
+        this.parentId = parentId;
         return this;
     }
 
