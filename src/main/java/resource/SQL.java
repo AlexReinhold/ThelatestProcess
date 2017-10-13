@@ -119,7 +119,7 @@ public class SQL {
                     "FROM tl_story s " +
                     "INNER JOIN tl_category c on c.id = s.category_id " +
                     "LEFT JOIN tl_category pc on pc.id = c.parent_id " +
-                    "INNER JOIN tl_news news on news.id = ( SELECT id FROM tl_news WHERE story_id = s.id order by publication_date desc limit 1 ) " +
+                    "INNER JOIN tl_news news on news.id = ( SELECT nn.id FROM tl_news nn WHERE nn.story_id = s.id order by nn.publication_date desc limit 1 ) " +
                     "INNER JOIN tl_source source on source.id = news.source_id " +
                     "WHERE news.id in (:ids)";
 

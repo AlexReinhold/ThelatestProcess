@@ -13,12 +13,10 @@ import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
+import org.elasticsearch.transport.ReceiveTimeoutTransportException;
 
-import java.util.Comparator;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeSet;
 
 public class ElasticSearchService {
 
@@ -34,7 +32,9 @@ public class ElasticSearchService {
     }
 
     private void iniciarConexion() {
-        Settings settings = ImmutableSettings.settingsBuilder().put("cluster.name", "elasticsearch").build();
+        Settings settings = ImmutableSettings.settingsBuilder()
+                .put("cluster.name", "elasticsearch")
+                .put("client.transport.sniff", true).build();
         client = new TransportClient(settings).addTransportAddress(new InetSocketTransportAddress("localhost", 9300));
 //        client = new TransportClient(settings).addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName("127.0.0.1"), 9300));
 //        client = new TransportClient().addTransportAddress(new InetSocketTransportAddress("localhost", 9300));
@@ -46,23 +46,18 @@ public class ElasticSearchService {
 
     public void insertStories(List<StoryES> stories){
 
-        List<StoryES> unique = stories.stream()
-                .collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparingInt(StoryES::getId))),
-                        ArrayList::new));
-
-        int created = 0;
-        for (StoryES s : unique) {
+        int created = 0, error = 0;
+        for (StoryES s : stories) {
             String json = new GsonBuilder()
                     .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX").serializeNulls().create().toJson(s);
-            IndexResponse response = client.prepareIndex(INDEX, STORY_TYPE, s.getId() + "")
-                    .setSource(json)
-                    .execute()
-                    .actionGet();
-            if(response.getId() != null)
+            if(insert(NEWS_TYPE, s.getId()+"", json))
                 created++;
+            else
+                error++;
 
         }
         logger.info("Stories Indexed: "+created);
+        logger.info("Stories Error: "+error);
     }
 
     public void insertNews(List<NewsES> news){
@@ -71,19 +66,17 @@ public class ElasticSearchService {
                 .collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparingInt(NewsES::getId))),
                         ArrayList::new));
 
-        int created = 0;
+        int created = 0, error = 0;
         for (NewsES n : unique) {
             String json = new GsonBuilder()
-                    .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX").serializeNulls().create().toJson(n);
-            IndexResponse response = client.prepareIndex(INDEX, NEWS_TYPE, n.getId()+"")
-                    .setSource(json)
-                    .execute()
-                    .actionGet();
-            if(response.getId() != null)
+                        .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX").serializeNulls().create().toJson(n);
+            if(insert(NEWS_TYPE, n.getId()+"", json))
                 created++;
-
+            else
+                error++;
         }
-        logger.info("News Indexed: "+created);
+        logger.info("Stories Indexed: "+created);
+        logger.info("Stories Error: "+error);
     }
 
     public void insertWTM(List<WTM> wtm){
@@ -96,6 +89,24 @@ public class ElasticSearchService {
             System.out.println(response);
 
         }
+
+    }
+
+    private boolean insert(String type, String id, String json){
+
+        try{
+            IndexResponse response = client.prepareIndex(INDEX, type, id)
+                    .setSource(json)
+                    .execute()
+                    .actionGet();
+            if(response.getId() != null)
+                return true;
+
+        }catch (ReceiveTimeoutTransportException ex){
+            logger.error(ex.getMessage());
+        }
+
+        return false;
 
     }
 

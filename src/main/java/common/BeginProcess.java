@@ -87,14 +87,13 @@ class BeginProcess {
                 while (!threadPool2.isTerminated()) {
                 }
 
-
-    //            if(!processCluster.getCompleted().isEmpty()){
-    //                Optional<List<StoryES>> storyES = storyDao.getStoriesForES(processCluster.getCompleted());
-    //                if(storyES.isPresent()){
-    //                    System.out.println(storyES.get().size());
-    //                    elasticSearchService.insertStories(storyES.get());
-    //                }
-    //            }
+//                if(!processCluster.getCompleted().isEmpty()){
+//                    Optional<List<StoryES>> storyES = storyDao.getStoriesForES(processCluster.getCompleted());
+//                    if(storyES.isPresent()){
+//                        System.out.println(storyES.get().size());
+//                        elasticSearchService.insertStories(storyES.get());
+//                    }
+//                }
 
                 if (!processCuratedNews.getCompleted().isEmpty()) {
                     logger.info("Sync stories in ES");
@@ -115,9 +114,6 @@ class BeginProcess {
 
                 }
 
-    //            if (storyDao.getClusterListFromJ2().size() > 0) {
-    //                this.start();
-    //            }
                 logger.info("Finisihed "+parentCat.getName());
                 logger.info("------------------------------");
 
