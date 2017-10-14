@@ -34,7 +34,7 @@ public class ElasticSearchService {
 
     private void iniciarConexion() {
         Settings settings = ImmutableSettings.settingsBuilder()
-                .put("cluster.name", "elasticsearch")
+//                .put("cluster.name", "elasticsearch")
                 .put("client.transport.sniff", true).build();
         client = new TransportClient(settings).addTransportAddress(new InetSocketTransportAddress("localhost", 9300));
     }
@@ -102,7 +102,7 @@ public class ElasticSearchService {
             if(response.getId() != null)
                 return true;
 
-        }catch (ReceiveTimeoutTransportException ex){
+        }catch (Exception ex){
             logger.error(ex.getMessage());
         }
 
