@@ -26,8 +26,9 @@ public class ElasticSearchService {
                                 NEWS_TYPE = "news", WTM_TYPE = "wtm", STORY_TYPE = "story", EXAMPLE_TYPE = "example";
     private Logger logger;
 
-    public ElasticSearchService() {
+    public ElasticSearchService(StoryDao storyDao) {
         this.iniciarConexion();
+        this.storyDao = storyDao;
         logger = Logger.getLogger(this.getClass().getName());
     }
 
@@ -36,8 +37,6 @@ public class ElasticSearchService {
                 .put("cluster.name", "elasticsearch")
                 .put("client.transport.sniff", true).build();
         client = new TransportClient(settings).addTransportAddress(new InetSocketTransportAddress("localhost", 9300));
-//        client = new TransportClient(settings).addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName("127.0.0.1"), 9300));
-//        client = new TransportClient().addTransportAddress(new InetSocketTransportAddress("localhost", 9300));
     }
 
     public void closeConnection() {
@@ -52,9 +51,10 @@ public class ElasticSearchService {
                     .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX").serializeNulls().create().toJson(s);
             if(insert(NEWS_TYPE, s.getId()+"", json))
                 created++;
-            else
+            else {
                 error++;
-
+                storyDao.insertUnprocessedStory(s.getId());
+            }
         }
         logger.info("Stories Indexed: "+created);
         logger.info("Stories Error: "+error);
@@ -75,8 +75,8 @@ public class ElasticSearchService {
             else
                 error++;
         }
-        logger.info("Stories Indexed: "+created);
-        logger.info("Stories Error: "+error);
+        logger.info("News Indexed: "+created);
+        logger.info("News Error: "+error);
     }
 
     public void insertWTM(List<WTM> wtm){

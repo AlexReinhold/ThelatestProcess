@@ -4,9 +4,11 @@ import javax.sql.DataSource;
 
 import mapper.elasticsearch.StoryESRowMapper;
 import mapper.j2.ClusterRowMapper;
+import mapper.j2.UnsynchronizedRowMapper;
 import mapper.tl.StoryRowMapper;
 import model.elasticsearch.StoryES;
 import model.j2.Cluster;
+import model.j2.Unsynchronized;
 import model.tl.Story;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -85,6 +87,33 @@ public class StoryDao {
             System.out.println("error stories for elastic search empty");
             return Optional.empty();
         }
+    }
+
+    public void insertUnprocessedStory(int storyId) {
+        KeyHolder holder = new GeneratedKeyHolder();
+        thelatestTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(SQL.TL.INSERTS.INSERT_UNSYNCCHRONIZED_STORIES);
+            ps.setInt(1, storyId);
+            return ps;
+        }, holder);
+    }
+
+    public Optional<List<Unsynchronized>> getUnsynchronized(){
+        try{
+            List<Unsynchronized> unsynchronizeds = j2Template.query(SQL.TL.SELECTS.GET_UNSYNCCHRONIZED_STORIES, new UnsynchronizedRowMapper<Unsynchronized>());
+            return Optional.of(unsynchronizeds);
+        }catch (EmptyResultDataAccessException ex){
+            System.out.println("error stories for unsynchronized search empty");
+            return Optional.empty();
+        }
+    }
+
+    public int deleteUnsynchronizedByID(int storyId) {
+        return j2Template.update(SQL.TL.DELETE.DELETE_UNSYNCCHRONIZED_STORIES_BY_ID, storyId);
+    }
+
+    public int deleteAllUnsynchronizeds() {
+        return j2Template.update(SQL.TL.DELETE.DELETE_ALL_UNSYNCCHRONIZED_STORIES);
     }
 
 }

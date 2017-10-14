@@ -52,7 +52,7 @@ class BeginProcess {
         if (!processingNews) {
             processDao.changeState(Process.NEWS.getId(), true);
 
-            ElasticSearchService elasticSearchService = new ElasticSearchService();
+            ElasticSearchService elasticSearchService = new ElasticSearchService(storyDao);
             for (Category parentCat : categoryDao.getParentCategories()) {
 
                 List<Cluster> clusterList = storyDao.getClusterListFromJ2(parentCat.getExternalId());

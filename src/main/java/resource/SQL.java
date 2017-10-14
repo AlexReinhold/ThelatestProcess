@@ -146,6 +146,12 @@ public class SQL {
                     "LEFT JOIN tl_category pc on pc.id=c.parent_id " +
                     "WHERE n.id in (:ids)";
 
+            public static final String GET_UNSYNCCHRONIZED_NEWS = ""+
+                    "SELECT * FROM unsynchronized_news ";
+
+            public static final String GET_UNSYNCCHRONIZED_STORIES = ""+
+                    "SELECT * FROM unsynchronized_stories ";
+
         }
 
         public static final class INSERTS {
@@ -183,6 +189,18 @@ public class SQL {
                     "        tags) " +
                     "VALUES (nextval('tl_news_id_seq'),?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
+            public static final String INSERT_UNSYNCCHRONIZED_NEWS = ""+
+                    "INSERT INTO unsynchronized_news "+
+                    "       (news_id, "+
+                    "        date) "+
+                    "VALUES (?, now() )";
+
+            public static final String INSERT_UNSYNCCHRONIZED_STORIES = ""+
+                    "INSERT INTO unsynchronized_stories "+
+                    "       (story_id, "+
+                    "        date) "+
+                    "VALUES (?, now() )";
+
         }
 
         public static final class UPDATES {
@@ -201,6 +219,24 @@ public class SQL {
                     "UPDATE fl_curated_news " +
                     "SET synchronized = ? " +
                     "WHERE id = ?";
+
+        }
+
+        public static final class DELETE {
+
+            public static final String DELETE_UNSYNCCHRONIZED_NEWS_BY_ID = ""+
+                    "DELETE FROM unsynchronized_news "+
+                    "WHERE news_id = ? ";
+
+            public static final String DELETE_UNSYNCCHRONIZED_STORIES_BY_ID = ""+
+                    "DELETE FROM unsynchronized_stories "+
+                    "WHERE story_id = ? ";
+
+            public static final String DELETE_ALL_UNSYNCCHRONIZED_NEWS = ""+
+                    "DELETE FROM unsynchronized_news ";
+
+            public static final String DELETE_ALL_UNSYNCCHRONIZED_STORIES = ""+
+                    "DELETE FROM unsynchronized_stories ";
 
         }
 
