@@ -49,7 +49,7 @@ public class ElasticSearchService {
         for (StoryES s : stories) {
             String json = new GsonBuilder()
                     .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX").serializeNulls().create().toJson(s);
-            if(insert(NEWS_TYPE, s.getId()+"", json))
+            if(insert(STORY_TYPE, s.getId()+"", json))
                 created++;
             else {
                 error++;
