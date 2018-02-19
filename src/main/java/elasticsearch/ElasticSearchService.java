@@ -35,7 +35,8 @@ public class ElasticSearchService {
     private void iniciarConexion() {
         Settings settings = ImmutableSettings.settingsBuilder()
 //                .put("cluster.name", "elasticsearch")
-                .put("client.transport.sniff", true).build();
+                .put("client.transport.sniff", true)
+                .put("client.transport.ping_timeout", 10000).build();
         client = new TransportClient(settings).addTransportAddress(new InetSocketTransportAddress("localhost", 9300));
     }
 

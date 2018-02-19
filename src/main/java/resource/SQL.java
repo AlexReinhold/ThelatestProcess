@@ -146,6 +146,30 @@ public class SQL {
                     "LEFT JOIN tl_category pc on pc.id=c.parent_id " +
                     "WHERE n.id in (:ids)";
 
+            public static final String FEED_FOR_ES_BY_RANGE = "" +
+                    "SELECT n.id, " +
+                    "       n.title, " +
+                    "       n.publication_date, " +
+                    "       n.snippet, " +
+                    "       n.imgurl, " +
+                    "       n.url, " +
+                    "       src.id as source_id, " +
+                    "       src.name as source_name, " +
+                    "       s.id as story_id, " +
+                    "       c.id as category_id, " +
+                    "       c.slug as category_slug, " +
+                    "       c.name as category_name, " +
+                    "       pc.slug as category_parent " +
+                    "FROM tl_news n " +
+                    "INNER JOIN tl_source src on src.id=n.source_id " +
+                    "INNER JOIN tl_story s on s.id=n.story_id " +
+                    "INNER JOIN tl_category c on c.id=s.category_id " +
+                    "LEFT JOIN tl_category pc on pc.id=c.parent_id " +
+                    "ORDER BY n.id OFFSET ? LIMIT ?";
+
+            public static final String COUNT_FEED_FOR_ES_BY_RANGE = "" +
+                    "SELECT count(*) FROM tl_news";
+
             public static final String GET_UNSYNCCHRONIZED_NEWS = ""+
                     "SELECT * FROM unsynchronized_news ";
 

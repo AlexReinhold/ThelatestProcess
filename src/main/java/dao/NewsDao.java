@@ -1,7 +1,9 @@
 package dao;
 
+import mapper.elasticsearch.FeedESRowMapper;
 import mapper.elasticsearch.NewsESRowMapper;
 import mapper.j2.CuratedNewRowMapper;
+import model.elasticsearch.FeedES;
 import model.elasticsearch.NewsES;
 import model.j2.CuratedNews;
 import model.tl.News;
@@ -66,12 +68,27 @@ public class NewsDao {
     public Optional<List<NewsES>> getNewsForES(List<Integer> listId){
         Map idsMap = Collections.singletonMap("ids", listId);
         try{
-            List<NewsES> newsESList = namedParameterJdbcTemplate.query(SQL.TL.SELECTS.NEWS_BY_ID_FOR_ES, idsMap, new NewsESRowMapper<NewsES>());
+            List<NewsES> newsESList = namedParameterJdbcTemplate.query(
+                    SQL.TL.SELECTS.NEWS_BY_ID_FOR_ES, idsMap, new NewsESRowMapper<NewsES>());
             return Optional.of(newsESList);
         }catch (EmptyResultDataAccessException ex){
             System.out.println("error news for elastic search empty");
             return Optional.empty();
         }
+    }
+
+    public Optional<List<FeedES>> getFeedsForES(int from, int size){
+        try{
+            List<FeedES> feedES = thelatestTemplate.query(SQL.TL.SELECTS.FEED_FOR_ES_BY_RANGE, new Object[]{from, size}, new FeedESRowMapper<FeedES>());
+            return Optional.of(feedES);
+        }catch (EmptyResultDataAccessException ex){
+            System.out.println("error feeds for elastic search empty");
+            return Optional.empty();
+        }
+    }
+
+    public int countAllFeeds() {
+        return thelatestTemplate.queryForObject(SQL.TL.SELECTS.COUNT_FEED_FOR_ES_BY_RANGE, Integer.class);
     }
 
 }
